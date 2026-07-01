@@ -9,6 +9,9 @@ pubspec.lock
 *.iml
 .vscode/
 
+# Tooling local de Claude Code (hooks/agentes) — no forma parte del entregable
+.claude/
+
 # Secrets — NUNCA commitear el token de TMDB
 env/*.json
 !env/tmdb.example.json

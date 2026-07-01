@@ -14,3 +14,18 @@ workspace:
 
 dev_dependencies:
   melos: ^7.0.0
+
+melos:
+  scripts:
+    analyze:
+      description: Análisis estático de todo el workspace.
+      run: dart analyze .
+    format:
+      description: Formatea el código; falla en CI si hay cambios pendientes.
+      run: dart format --set-exit-if-changed .
+    test:
+      description: Corre los tests de los paquetes que tienen carpeta test/.
+      run: melos exec --dir-exists=test -- flutter test
+    generate:
+      description: Corre build_runner en los paquetes que usan code-gen.
+      run: melos exec --depends-on=build_runner -- dart run build_runner build
