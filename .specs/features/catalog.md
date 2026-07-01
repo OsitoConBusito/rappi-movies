@@ -1,9 +1,9 @@
 # Spec — Catálogo de Películas y Series
 
-- **Estado:** Draft
+- **Estado:** En progreso
 - **Autor:** Juan Cano (con asistencia de Claude)
 - **Última actualización:** 2026-07-01
-- **Reconciliado contra código:** — (aún sin implementar)
+- **Reconciliado contra código:** 2026-07-01 (HU-1 implementada; HU-2 y HU-3 pendientes)
 
 ## 1. Objetivo
 

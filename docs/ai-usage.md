@@ -51,4 +51,24 @@ aceptó sin discusión.
 - **Verificación:** `melos run analyze` + `generate` + `test` en verde; 3 paquetes con
   tests unitarios/widget.
 
+### 2026-07-01 — M1: Catálogo (HU-1) end-to-end, dominio-primero
+
+- **Qué se pidió a la IA:** implementar la pantalla de catálogo con datos reales de
+  TMDB, paginación y estados de UI, empezando por el dominio.
+- **Aporte de la IA:**
+  - Modeló el dominio a partir del **JSON real** de TMDB (diferencias movie/tv), diseñó
+    el contrato de repositorio **reactivo**, la capa de datos (DTOs freezed, datasource,
+    mapper, repo con caché reactiva en memoria) y la presentación (notifier con
+    paginación; Catalog Home con toggle y carruseles Popular/Top Rated; estados
+    skeleton/error/data).
+  - Analizó los mockups de Claude Design (pantallas + States) para guiar la fidelidad.
+- **Decisiones humanas / de diseño:**
+  - **Sin usecases pass-through**: el notifier usa el contrato del repositorio; añadir
+    usecases que solo reenvían sería la capa ceremonial que el ADR-0001 dice evitar.
+  - Hero "Featured Tonight" diferido al pulido (M6).
+  - Offline: pantalla completa sin caché / banner ligero con caché (a implementar en M4).
+- **Verificación:** 12 tests en `feature_catalog` (dominio, mapper, repo con acumulación
+  de páginas y offline-first) + widget test del app; `melos analyze`/`test` verdes; el
+  build web compila el grafo completo con el token real.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->
