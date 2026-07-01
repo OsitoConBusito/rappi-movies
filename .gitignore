@@ -1,0 +1,23 @@
+# Build / tooling
+.dart_tool/
+build/
+.melos_tool/
+pubspec.lock
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Secrets — NUNCA commitear el token de TMDB
+env/*.json
+*.env
+.env*
+
+# Generated
+*.g.dart
+*.freezed.dart
+*.gr.dart
+
+# OS
+.DS_Store
