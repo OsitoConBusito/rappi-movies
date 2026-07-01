@@ -13,7 +13,6 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter:
     sdk: flutter
-  google_fonts: ^8.1.0
   shimmer: ^3.0.0
 
 dev_dependencies:
@@ -23,3 +22,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # Fuentes de MARQUEE empaquetadas (offline-first: sin descarga en runtime).
+  # Ambas son variables (eje wght), Flutter aplica el peso vía fontWeight.
+  fonts:
+    - family: Sora
+      fonts:
+        - asset: fonts/Sora.ttf
+    - family: IBMPlexSans
+      fonts:
+        - asset: fonts/IBMPlexSans.ttf

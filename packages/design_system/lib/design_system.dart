@@ -1,0 +1,9 @@
+/// API pública del design system **MARQUEE**: tokens, tema y componentes.
+library;
+
+export 'src/components/poster_card.dart';
+export 'src/components/shimmer_box.dart';
+export 'src/theme/app_theme.dart';
+export 'src/tokens/app_colors.dart';
+export 'src/tokens/app_spacing.dart';
+export 'src/tokens/app_typography.dart';
