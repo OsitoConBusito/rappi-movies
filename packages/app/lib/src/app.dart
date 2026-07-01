@@ -1,5 +1,5 @@
-import 'package:app/src/home_placeholder.dart';
 import 'package:design_system/design_system.dart';
+import 'package:feature_catalog/feature_catalog.dart';
 import 'package:flutter/material.dart';
 
 /// Raíz de la app. Aplica los temas claro/oscuro de MARQUEE; el `themeMode`
@@ -15,7 +15,7 @@ class MarqueeApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.dark,
-      home: const HomePlaceholder(),
+      home: const CatalogHomePage(),
     );
   }
 }
