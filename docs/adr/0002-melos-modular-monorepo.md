@@ -13,13 +13,21 @@ Monorepo gestionado con **Melos 7.x**, con **4 paquetes** de responsabilidad cla
 
 | Paquete          | Responsabilidad                                                    |
 |------------------|--------------------------------------------------------------------|
-| `app`            | Entrypoint, composición de DI, router, shell responsive.           |
-| `design_system`  | Tema claro/oscuro, tokens, componentes, animaciones base.          |
-| `core`           | Networking (Dio), `Result`, conectividad, errores, storage (Drift).|
-| `catalog`        | Feature: `domain` / `data` / `presentation` de pelis y series.     |
+| Paquete                    | Responsabilidad                                                    |
+|----------------------------|--------------------------------------------------------------------|
+| `app`                      | Entrypoint, composición de DI, router, shell responsive.           |
+| `design_system`            | Tema claro/oscuro, tokens, componentes, animaciones base.          |
+| `core`                     | Networking (Dio), `Result`, conectividad, errores, storage (Drift).|
+| `features/feature_catalog` | Feature: `domain` / `data` / `presentation` de pelis y series.     |
+
+Organización **feature-first**: el nivel superior agrupa por feature y las capas
+(`domain`/`data`/`presentation`) viven dentro de cada una; `presentation` se subdivide por
+sub-feature (`browse`/`detail`/`search`/`shared`), no por tipo de widget. `core` y
+`design_system` son transversales (no features): las features dependen de ellos, nunca al
+revés.
 
 Reglas de dependencia entre paquetes:
-`app → {catalog, design_system, core}`, `catalog → {core, design_system}`,
+`app → {feature_catalog, design_system, core}`, `feature_catalog → {core, design_system}`,
 `design_system → ∅`, `core → ∅`. Nada apunta hacia `app`.
 
 Melos centraliza scripts: `analyze`, `test`, `format`, `generate` (build_runner),

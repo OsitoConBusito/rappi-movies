@@ -1,0 +1,5 @@
+{
+  "TMDB_ACCESS_TOKEN": "<tu-TMDB-API-Read-Access-Token-v4>",
+  "TMDB_BASE_URL": "https://api.themoviedb.org/3",
+  "TMDB_IMAGE_BASE_URL": "https://image.tmdb.org/t/p"
+}

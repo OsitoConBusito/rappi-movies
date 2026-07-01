@@ -11,6 +11,7 @@ pubspec.lock
 
 # Secrets — NUNCA commitear el token de TMDB
 env/*.json
+!env/tmdb.example.json
 *.env
 .env*
 

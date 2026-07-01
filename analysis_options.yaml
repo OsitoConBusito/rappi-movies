@@ -1,0 +1,16 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "**/*.drift.dart"
+    - "**/*.mocks.dart"
+
+linter:
+  rules:
+    # Los paquetes son internos (no se publican en pub.dev) y el estilo del
+    # proyecto prohíbe comentarios redundantes: forzar un doc en cada miembro
+    # público generaría ruido tipo "/// Crea un X.". Desactivado a propósito.
+    public_member_api_docs: false

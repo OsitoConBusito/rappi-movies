@@ -1,0 +1,16 @@
+name: rappi_movies_workspace
+description: Monorepo de la app de catálogo de películas/series (TMDB).
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.2
+
+workspace:
+  - packages/app
+  - packages/core
+  - packages/design_system
+  - packages/features/feature_catalog
+
+dev_dependencies:
+  melos: ^7.0.0
