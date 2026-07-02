@@ -5,9 +5,9 @@ import 'package:i18n/i18n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Espera la carga del locale del dispositivo (incluye el diferido) antes de
-  // renderizar, para evitar un parpadeo de idioma en el primer frame.
-  await LocaleSettings.useDeviceLocale();
+  // Español por defecto (ignora el locale del sistema). Restaura el idioma
+  // guardado antes de renderizar, evitando un parpadeo en el primer frame.
+  await restoreSavedLocale();
   runApp(
     TranslationProvider(
       child: const ProviderScope(child: MarqueeApp()),

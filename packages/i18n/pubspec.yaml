@@ -12,6 +12,8 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
+  flutter_riverpod: ^3.3.2
+  shared_preferences: ^2.5.5
   slang: ^4.18.0
   slang_flutter: ^4.18.0
 

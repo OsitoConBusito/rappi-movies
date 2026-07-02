@@ -8,9 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'catalog_data_providers.g.dart';
 
 /// Idioma de los datos de TMDB (RN-4): el languageCode del locale activo.
+/// Reactivo al selector de idioma — cambiar de idioma refresca el catálogo.
 @riverpod
 String tmdbLanguage(Ref ref) =>
-    LocaleSettings.instance.currentLocale.languageCode;
+    ref.watch(localeControllerProvider).languageCode;
 
 @riverpod
 CatalogRemoteDataSource catalogRemoteDataSource(Ref ref) =>

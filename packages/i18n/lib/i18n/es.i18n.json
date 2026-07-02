@@ -9,6 +9,11 @@
     "popular": "Popular",
     "topRated": "Top Rated"
   },
+  "language": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "English"
+  },
   "errors": {
     "network": "Sin conexión a internet.",
     "notFound": "Recurso no encontrado.",
