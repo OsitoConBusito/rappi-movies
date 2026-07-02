@@ -13,7 +13,7 @@ class SegmentOption<T> {
 
 /// Control segmentado con una "píldora" dorada que se **desliza** hacia la
 /// opción activa. Los segmentos tienen el mismo ancho y admiten icono; con
-/// [minWidth] se pueden alinear varios controles al mismo ancho total.
+/// [width] se pueden alinear varios controles al mismo ancho total.
 class SegmentedPills<T> extends StatelessWidget {
   const SegmentedPills({
     required this.options,
@@ -21,7 +21,7 @@ class SegmentedPills<T> extends StatelessWidget {
     required this.onSelected,
     this.textStyle,
     this.iconSize = 18,
-    this.minWidth,
+    this.width,
     super.key,
   });
 
@@ -31,15 +31,17 @@ class SegmentedPills<T> extends StatelessWidget {
   final TextStyle? textStyle;
   final double iconSize;
 
-  /// Ancho total mínimo del control. Útil para alinear varios controles al
-  /// mismo ancho; si es null, el control se ajusta a su contenido.
-  final double? minWidth;
+  /// Ancho total fijo del control. Útil para alinear varios controles al mismo
+  /// ancho; si es null, el control se ajusta a su contenido.
+  final double? width;
 
   static const Duration slideDuration = Duration(milliseconds: 260);
 
-  Alignment _alignmentFor(int index) {
-    if (options.length == 1) return Alignment.center;
-    return Alignment(index / (options.length - 1) * 2 - 1, 0);
+  /// Posición horizontal (−1 izquierda … 1 derecha) de la píldora para el
+  /// segmento [index].
+  double _alignmentXFor(int index) {
+    if (options.length <= 1) return 0;
+    return index / (options.length - 1) * 2 - 1;
   }
 
   @override
@@ -58,18 +60,23 @@ class SegmentedPills<T> extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: AnimatedAlign(
+            child: TweenAnimationBuilder<double>(
               duration: slideDuration,
               curve: Curves.easeOutBack,
-              alignment: _alignmentFor(selectedIndex < 0 ? 0 : selectedIndex),
-              child: FractionallySizedBox(
-                widthFactor: 1 / options.length,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: colors.accent,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
+              tween: Tween<double>(
+                end: _alignmentXFor(selectedIndex < 0 ? 0 : selectedIndex),
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: colors.accent,
+                  borderRadius: BorderRadius.circular(999),
                 ),
+              ),
+              builder: (context, x, child) => FractionallySizedBox(
+                widthFactor: 1 / options.length,
+                heightFactor: 1,
+                alignment: Alignment(x, 0),
+                child: child,
               ),
             ),
           ),
@@ -91,11 +98,8 @@ class SegmentedPills<T> extends StatelessWidget {
       ),
     );
 
-    if (minWidth != null) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(minWidth: minWidth!),
-        child: control,
-      );
+    if (width != null) {
+      return SizedBox(width: width, child: control);
     }
     return IntrinsicWidth(child: control);
   }

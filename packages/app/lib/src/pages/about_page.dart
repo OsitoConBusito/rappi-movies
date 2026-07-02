@@ -45,7 +45,7 @@ class AboutPage extends ConsumerWidget {
             _SettingRow(
               label: t.theme.title,
               child: SegmentedPills<ThemeMode>(
-                minWidth: _controlWidth,
+                width: _controlWidth,
                 textStyle: textTheme.labelSmall,
                 iconSize: 16,
                 options: [
@@ -70,7 +70,7 @@ class AboutPage extends ConsumerWidget {
             _SettingRow(
               label: t.language.label,
               child: SegmentedPills<AppLocale>(
-                minWidth: _controlWidth,
+                width: _controlWidth,
                 textStyle: textTheme.labelSmall,
                 iconSize: 16,
                 options: [
