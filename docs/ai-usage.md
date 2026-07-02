@@ -84,4 +84,25 @@ aceptó sin discusión.
 - **Verificación:** tests de traducciones + suite completa (15) verde; `melos analyze`
   limpio; build previo del catálogo intacto.
 
+### 2026-07-01 — M3: Detalle (HU-2), navegación y animaciones
+
+- **Qué se pidió a la IA:** pantalla de detalle, bottom nav y animaciones,
+  dominio-primero; además el selector manual de idioma.
+- **Aporte de la IA:**
+  - Capa de datos del detalle (endpoint con `append_to_response=credits`, DTOs
+    freezed, mapper, `getDetail` con caché) y `MediaDetailPage` (`SliverAppBar`
+    colapsable, **Hero** del poster desde el listado, géneros/sinopsis/reparto).
+  - Router `go_router` con `StatefulShellRoute` (bottom nav Inicio/Buscar) y
+    ruta de detalle de nivel superior; `FadeSlideIn` (stagger) en el detalle.
+  - Selector de idioma (español por defecto) persistente y reactivo a TMDB.
+- **Decisiones humanas:**
+  - Bottom nav con los destinos en alcance (Home/Search); Saved/You fuera del
+    alcance del enunciado, documentados.
+  - Idioma **español por defecto** con selector manual (ignora el locale del
+    sistema).
+  - Navegación desacoplada: la feature emite `onOpenMedia`, el app resuelve la
+    ruta (la feature no conoce go_router). `Failure` implementa `Exception`.
+- **Verificación:** 20 tests verdes; `melos analyze` limpio; el build web compila
+  el grafo completo (router + detalle) con el token real.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->
