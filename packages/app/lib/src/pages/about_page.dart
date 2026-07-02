@@ -13,6 +13,10 @@ class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
   static const _developer = 'Juan Cano';
+
+  /// Ancho compartido de los controles segmentados para que tema e idioma
+  /// queden alineados al mismo ancho.
+  static const double _controlWidth = 196;
   static const _webUrl = 'https://gigbook.app';
   static const _appStoreUrl =
       'https://apps.apple.com/co/app/gigbook/id6774455071';
@@ -40,10 +44,21 @@ class AboutPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.xxl),
             _SettingRow(
               label: t.theme.title,
-              child: _Segmented<ThemeMode>(
+              child: SegmentedPills<ThemeMode>(
+                minWidth: _controlWidth,
+                textStyle: textTheme.labelSmall,
+                iconSize: 16,
                 options: [
-                  (ThemeMode.light, t.theme.light),
-                  (ThemeMode.dark, t.theme.dark),
+                  SegmentOption(
+                    value: ThemeMode.light,
+                    label: t.theme.light,
+                    icon: Icons.light_mode_rounded,
+                  ),
+                  SegmentOption(
+                    value: ThemeMode.dark,
+                    label: t.theme.dark,
+                    icon: Icons.dark_mode_rounded,
+                  ),
                 ],
                 selected: themeMode,
                 onSelected: (mode) => unawaited(
@@ -54,10 +69,21 @@ class AboutPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.lg),
             _SettingRow(
               label: t.language.label,
-              child: _Segmented<AppLocale>(
+              child: SegmentedPills<AppLocale>(
+                minWidth: _controlWidth,
+                textStyle: textTheme.labelSmall,
+                iconSize: 16,
                 options: [
-                  (AppLocale.es, t.language.es),
-                  (AppLocale.en, t.language.en),
+                  SegmentOption(
+                    value: AppLocale.es,
+                    label: t.language.es,
+                    icon: Icons.language_rounded,
+                  ),
+                  SegmentOption(
+                    value: AppLocale.en,
+                    label: t.language.en,
+                    icon: Icons.translate_rounded,
+                  ),
                 ],
                 selected: locale,
                 onSelected: (value) => unawaited(
@@ -114,58 +140,6 @@ class _SettingRow extends StatelessWidget {
         Text(label, style: Theme.of(context).textTheme.titleMedium),
         child,
       ],
-    );
-  }
-}
-
-class _Segmented<T> extends StatelessWidget {
-  const _Segmented({
-    required this.options,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  final List<(T, String)> options;
-  final T selected;
-  final void Function(T value) onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final onAccent = Theme.of(context).colorScheme.onPrimary;
-
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final (value, label) in options)
-            GestureDetector(
-              onTap: () => onSelected(value),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: value == selected ? colors.accent : Colors.transparent,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  label,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: value == selected ? onAccent : colors.textSecondary,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
