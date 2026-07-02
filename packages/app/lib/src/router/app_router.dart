@@ -1,4 +1,6 @@
+import 'package:app/src/pages/about_page.dart';
 import 'package:app/src/widgets/offline_banner.dart';
+import 'package:design_system/design_system.dart';
 import 'package:feature_catalog/feature_catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +38,14 @@ final appRouter = GoRouter(
                   extra: media,
                 ),
               ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/about',
+              builder: (context, state) => const AboutPage(),
             ),
           ],
         ),
@@ -78,7 +88,7 @@ class _ScaffoldWithNavBar extends StatelessWidget {
         child: Column(
           children: [
             const OfflineBanner(),
-            Expanded(child: navigationShell),
+            Expanded(child: CenteredContent(child: navigationShell)),
           ],
         ),
       ),
@@ -95,6 +105,11 @@ class _ScaffoldWithNavBar extends StatelessWidget {
             icon: const Icon(Icons.search_outlined),
             selectedIcon: const Icon(Icons.search_rounded),
             label: t.nav.search,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.info_outline_rounded),
+            selectedIcon: const Icon(Icons.info_rounded),
+            label: t.nav.about,
           ),
         ],
       ),

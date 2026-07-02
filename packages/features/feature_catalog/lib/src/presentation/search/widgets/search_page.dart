@@ -204,21 +204,25 @@ class _ResultsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: AppSpacing.md,
-        mainAxisSpacing: AppSpacing.lg,
-        childAspectRatio: 0.5,
-      ),
-      itemCount: medias.length,
-      itemBuilder: (context, index) {
-        final media = medias[index];
-        return MediaPosterTile(
-          media: media,
-          showTypeBadge: true,
-          onTap: () => onOpen?.call(media),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: AppBreakpoints.gridColumns(constraints.maxWidth),
+            crossAxisSpacing: AppSpacing.md,
+            mainAxisSpacing: AppSpacing.lg,
+            childAspectRatio: 0.5,
+          ),
+          itemCount: medias.length,
+          itemBuilder: (context, index) {
+            final media = medias[index];
+            return MediaPosterTile(
+              media: media,
+              showTypeBadge: true,
+              onTap: () => onOpen?.call(media),
+            );
+          },
         );
       },
     );

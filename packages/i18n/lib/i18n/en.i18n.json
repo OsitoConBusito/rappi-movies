@@ -35,7 +35,19 @@
   },
   "nav": {
     "home": "Home",
-    "search": "Search"
+    "search": "Search",
+    "about": "About"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "about": {
+    "madeBy": "Made by",
+    "role": "Flutter developer",
+    "otherApp": "My app on the stores",
+    "web": "Website",
+    "appStore": "App Store",
+    "playStore": "Google Play"
   },
   "offline": {
     "banner": "Offline — showing saved content",
