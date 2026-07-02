@@ -26,10 +26,10 @@ melos:
       run: dart format --set-exit-if-changed .
     test:
       description: Corre los tests de los paquetes que tienen carpeta test/.
-      run: melos exec --dir-exists=test -- flutter test
+      run: dart run melos exec --dir-exists=test -- flutter test
     generate:
       description: Corre build_runner en los paquetes que usan code-gen.
-      run: melos exec --depends-on=build_runner -- dart run build_runner build
+      run: dart run melos exec --depends-on=build_runner -- dart run build_runner build
     i18n:
       description: Genera las traducciones (slang) del paquete i18n.
-      run: melos exec --scope=i18n -- dart run slang
+      run: dart run melos exec --scope=i18n -- dart run slang
