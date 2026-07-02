@@ -47,6 +47,10 @@ class CatalogSection extends _$CatalogSection {
         .read(catalogRepositoryProvider)
         .refreshCategory(type: type, category: category, page: page);
 
+    // El provider pudo disponerse durante el await (p. ej. al cambiar el
+    // toggle Movies/Series); no escribas state sobre un Ref ya destruido.
+    if (!ref.mounted) return;
+
     result.match(
       (failure) {
         state = state.items.isEmpty
