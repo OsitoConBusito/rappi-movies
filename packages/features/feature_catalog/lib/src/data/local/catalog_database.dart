@@ -45,7 +45,18 @@ class MediaDetailEntries extends Table {
 /// `drift_flutter`.
 @DriftDatabase(tables: [MediaEntries, CategoryItems, MediaDetailEntries])
 class CatalogDatabase extends _$CatalogDatabase {
-  CatalogDatabase() : super(driftDatabase(name: 'catalog'));
+  CatalogDatabase()
+    : super(
+        driftDatabase(
+          name: 'catalog',
+          // En web, Drift corre sobre WASM: apuntamos a los assets servidos
+          // desde web/ (sqlite3.wasm + drift_worker.js). En móvil se ignora.
+          web: DriftWebOptions(
+            sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+            driftWorker: Uri.parse('drift_worker.js'),
+          ),
+        ),
+      );
 
   /// Constructor para tests (base en memoria).
   CatalogDatabase.forTesting(super.e);
