@@ -3,6 +3,7 @@ import 'package:feature_catalog/src/domain/entities/media.dart';
 import 'package:feature_catalog/src/presentation/browse/providers/selected_media_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i18n/i18n.dart';
 
 /// Control segmentado que alterna el tipo de contenido del catálogo entre
 /// películas y series (RN-2).
@@ -13,6 +14,7 @@ class MediaTypeToggle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selected = ref.watch(selectedMediaTypeProvider);
     final colors = context.colors;
+    final t = context.t;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xs),
@@ -25,10 +27,14 @@ class MediaTypeToggle extends ConsumerWidget {
         children: [
           _Segment(
             type: MediaType.movie,
-            label: 'Películas',
+            label: t.catalog.movies,
             selected: selected,
           ),
-          _Segment(type: MediaType.tv, label: 'Series', selected: selected),
+          _Segment(
+            type: MediaType.tv,
+            label: t.catalog.series,
+            selected: selected,
+          ),
         ],
       ),
     );

@@ -5,6 +5,7 @@ import 'package:feature_catalog/src/presentation/browse/widgets/catalog_carousel
 import 'package:feature_catalog/src/presentation/browse/widgets/media_type_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i18n/i18n.dart';
 
 /// Pantalla principal del catálogo (HU-1): toggle Movies/Series y las secciones
 /// Popular y Top Rated como carruseles del tipo seleccionado.
@@ -15,6 +16,7 @@ class CatalogHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final type = ref.watch(selectedMediaTypeProvider);
     final textTheme = Theme.of(context).textTheme;
+    final t = context.t;
 
     return Scaffold(
       body: SafeArea(
@@ -46,13 +48,13 @@ class CatalogHomePage extends ConsumerWidget {
             CatalogCarousel(
               type: type,
               category: MediaCategory.popular,
-              title: 'Popular',
+              title: t.catalog.popular,
             ),
             const SizedBox(height: AppSpacing.xl),
             CatalogCarousel(
               type: type,
               category: MediaCategory.topRated,
-              title: 'Top Rated',
+              title: t.catalog.topRated,
             ),
             const SizedBox(height: AppSpacing.xl),
           ],

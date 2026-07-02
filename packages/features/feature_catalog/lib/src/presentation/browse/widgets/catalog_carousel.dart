@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
+import 'package:feature_catalog/src/presentation/browse/failure_l10n.dart';
 import 'package:feature_catalog/src/presentation/browse/providers/catalog_section_notifier.dart';
 import 'package:feature_catalog/src/presentation/browse/state/catalog_section_state.dart';
 import 'package:feature_catalog/src/presentation/browse/widgets/media_poster_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i18n/i18n.dart';
 
 /// Sección horizontal (carrusel) de una categoría del catálogo. Mapea el estado
 /// del notifier a los estados de UI del spec: loading (skeleton), error
@@ -73,7 +75,7 @@ class _CatalogCarouselState extends ConsumerState<CatalogCarousel> {
             children: [
               Text(widget.title, style: textTheme.titleLarge),
               Text(
-                'Ver todo',
+                context.t.common.seeAll,
                 style: textTheme.labelSmall?.copyWith(
                   color: context.colors.textMuted,
                 ),
@@ -158,17 +160,20 @@ class _CarouselError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final t = context.t;
+    final message = state.failure?.localized(t) ?? t.errors.loadFailed;
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            state.failure?.message ?? 'No pudimos cargar esto ahora.',
+            message,
             textAlign: TextAlign.center,
             style: textTheme.bodyMedium,
           ),
           const SizedBox(height: AppSpacing.sm),
-          TextButton(onPressed: onRetry, child: const Text('Reintentar')),
+          TextButton(onPressed: onRetry, child: Text(t.common.retry)),
         ],
       ),
     );

@@ -5,12 +5,12 @@ import 'package:feature_catalog/src/domain/entities/media.dart';
 /// Fuente de datos remota del catálogo (TMDB). Construye las rutas a partir del
 /// tipo y la categoría, y delega el manejo de errores al [ApiClient].
 class CatalogRemoteDataSource {
-  const CatalogRemoteDataSource(this._apiClient);
+  const CatalogRemoteDataSource(this._apiClient, {required this.languageCode});
 
   final ApiClient _apiClient;
 
-  // TODO(juan): derivar del locale del dispositivo con fallback en (RN-4, M6).
-  static const String _language = 'es-MX';
+  /// Idioma de los datos de TMDB (RN-4), derivado del locale activo.
+  final String languageCode;
 
   Future<Either<Failure, MediaPageDto>> getCategory({
     required MediaType type,
@@ -20,7 +20,7 @@ class CatalogRemoteDataSource {
     final path = '/${_typeSegment(type)}/${_categorySegment(category)}';
     return _apiClient.get<MediaPageDto>(
       path,
-      queryParameters: {'page': page, 'language': _language},
+      queryParameters: {'page': page, 'language': languageCode},
       decode: (data) => MediaPageDto.fromJson(data! as Map<String, dynamic>),
     );
   }
