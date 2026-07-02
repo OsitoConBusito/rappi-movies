@@ -1,3 +1,4 @@
+import 'package:app/src/widgets/offline_banner.dart';
 import 'package:feature_catalog/feature_catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +58,12 @@ class _ScaffoldWithNavBar extends StatelessWidget {
     final t = context.t;
 
     return Scaffold(
-      body: navigationShell,
+      body: Column(
+        children: [
+          const OfflineBanner(),
+          Expanded(child: navigationShell),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: navigationShell.goBranch,

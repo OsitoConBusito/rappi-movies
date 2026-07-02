@@ -26,6 +26,9 @@
     "home": "Home",
     "search": "Search"
   },
+  "offline": {
+    "banner": "Offline — showing saved content"
+  },
   "errors": {
     "network": "No internet connection.",
     "notFound": "Resource not found.",
