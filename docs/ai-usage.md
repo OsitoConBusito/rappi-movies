@@ -105,4 +105,21 @@ aceptó sin discusión.
 - **Verificación:** 20 tests verdes; `melos analyze` limpio; el build web compila
   el grafo completo (router + detalle) con el token real.
 
+### 2026-07-01 — M4: offline-first (Drift SSOT) + conectividad
+
+- **Qué se pidió a la IA:** offline-first real (móvil + web WASM) y detección de
+  conectividad, aprovechando el contrato reactivo ya diseñado.
+- **Aporte de la IA:**
+  - `CatalogDatabase` (Drift): tablas de ítems, orden por categoría y detalle.
+  - **Swap del repo a single-source-of-truth**: `watchCategory` emite desde Drift
+    y `refreshCategory` actualiza la caché — **sin tocar dominio ni UI**, tal como
+    el contrato reactivo lo previó desde M1. `getDetail` sirve del caché offline.
+  - `ConnectivityService` (reachability real, ADR-0007) + `OfflineBanner` no
+    intrusivo; assets WASM (`sqlite3.wasm` + `drift_worker.js`) para web.
+- **Decisiones humanas:** Drift SSOT como diferenciador técnico; banner no
+  intrusivo (offline con caché) reconciliado con la pantalla full-screen del
+  diseño (caso sin caché).
+- **Verificación:** test de integración con Drift en memoria (offline mantiene la
+  caché); 22 tests verdes; el build web compila Drift-on-web.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->

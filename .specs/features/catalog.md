@@ -3,7 +3,7 @@
 - **Estado:** En progreso
 - **Autor:** Juan Cano (con asistencia de Claude)
 - **Última actualización:** 2026-07-01
-- **Reconciliado contra código:** 2026-07-01 (HU-1 y HU-2 implementadas; HU-3 pendiente)
+- **Reconciliado contra código:** 2026-07-01 (HU-1, HU-2 y offline-first/RN-5 implementadas; HU-3 pendiente)
 
 ## 1. Objetivo
 
