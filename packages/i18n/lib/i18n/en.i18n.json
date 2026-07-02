@@ -15,7 +15,11 @@
     "en": "English"
   },
   "detail": {
-    "cast": "Cast"
+    "cast": "Cast",
+    "similar": "Similar",
+    "director": "Director",
+    "language": "Original language",
+    "status": "Status"
   },
   "search": {
     "title": "Search",

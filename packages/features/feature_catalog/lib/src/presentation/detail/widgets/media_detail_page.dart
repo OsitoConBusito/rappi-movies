@@ -5,6 +5,7 @@ import 'package:feature_catalog/src/data/providers/catalog_data_providers.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
 import 'package:feature_catalog/src/domain/entities/media_detail.dart';
 import 'package:feature_catalog/src/presentation/browse/failure_l10n.dart';
+import 'package:feature_catalog/src/presentation/browse/widgets/media_poster_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i18n/i18n.dart';
@@ -16,6 +17,7 @@ class MediaDetailPage extends ConsumerWidget {
     required this.type,
     required this.id,
     this.preview,
+    this.onOpenMedia,
     super.key,
   });
 
@@ -25,6 +27,9 @@ class MediaDetailPage extends ConsumerWidget {
   /// Datos del listado (si se navegó desde ahí). Permiten mostrar el poster con
   /// la transición Hero de inmediato mientras carga el detalle completo.
   final Media? preview;
+
+  /// Navegación al detalle de un título relacionado (carrusel "similares").
+  final void Function(Media media)? onOpenMedia;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +45,7 @@ class MediaDetailPage extends ConsumerWidget {
           error: error,
           onRetry: () => ref.invalidate(mediaDetailProvider(type, id)),
         ),
-        data: (loaded) => _DetailContent(detail: loaded),
+        data: (loaded) => _DetailContent(detail: loaded, onOpen: onOpenMedia),
       ),
     );
   }
@@ -57,23 +62,14 @@ class _DetailLoading extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final imageBaseUrl = ref.watch(appConfigProvider).tmdbImageBaseUrl;
-    final colors = context.colors;
     final textTheme = Theme.of(context).textTheme;
 
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          expandedHeight: 280,
-          pinned: true,
-          backgroundColor: colors.surface,
-          flexibleSpace: FlexibleSpaceBar(
-            background: _Backdrop(
-              url: preview.backdropPath == null
-                  ? null
-                  : '$imageBaseUrl/w780${preview.backdropPath}',
-              surface: colors.background,
-            ),
-          ),
+        _DetailBackdropBar(
+          url: preview.backdropPath == null
+              ? null
+              : '$imageBaseUrl/w780${preview.backdropPath}',
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -124,9 +120,10 @@ class _DetailLoading extends ConsumerWidget {
 }
 
 class _DetailContent extends ConsumerWidget {
-  const _DetailContent({required this.detail});
+  const _DetailContent({required this.detail, this.onOpen});
 
   final MediaDetail detail;
+  final void Function(Media media)? onOpen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -137,18 +134,10 @@ class _DetailContent extends ConsumerWidget {
 
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          expandedHeight: 280,
-          pinned: true,
-          backgroundColor: colors.surface,
-          flexibleSpace: FlexibleSpaceBar(
-            background: _Backdrop(
-              url: detail.backdropPath == null
-                  ? null
-                  : '$imageBaseUrl/w780${detail.backdropPath}',
-              surface: colors.background,
-            ),
-          ),
+        _DetailBackdropBar(
+          url: detail.backdropPath == null
+              ? null
+              : '$imageBaseUrl/w780${detail.backdropPath}',
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -186,11 +175,133 @@ class _DetailContent extends ConsumerWidget {
                       imageBaseUrl: imageBaseUrl,
                     ),
                   ),
+                FadeSlideIn(
+                  delay: const Duration(milliseconds: 220),
+                  child: _InfoGrid(detail: detail),
+                ),
+                if (detail.recommendations.isNotEmpty)
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 300),
+                    child: _SimilarCarousel(
+                      medias: detail.recommendations,
+                      onOpen: onOpen,
+                    ),
+                  ),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _DetailBackdropBar extends StatelessWidget {
+  const _DetailBackdropBar({required this.url});
+
+  final String? url;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return SliverAppBar(
+      expandedHeight: 280,
+      pinned: true,
+      stretch: true,
+      backgroundColor: colors.surface,
+      // parallax (colapso) y zoomBackground (over-scroll) son los defaults de
+      // FlexibleSpaceBar; solo habilitamos el stretch en el SliverAppBar.
+      flexibleSpace: FlexibleSpaceBar(
+        background: _Backdrop(url: url, surface: colors.background),
+      ),
+    );
+  }
+}
+
+class _InfoGrid extends StatelessWidget {
+  const _InfoGrid({required this.detail});
+
+  final MediaDetail detail;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final rows = <(String, String)>[
+      if (detail.director != null) (t.detail.director, detail.director!),
+      if (detail.originalLanguage != null)
+        (t.detail.language, detail.originalLanguage!.toUpperCase()),
+      if (detail.status != null) (t.detail.status, detail.status!),
+    ];
+    if (rows.isEmpty) return const SizedBox.shrink();
+
+    final textTheme = Theme.of(context).textTheme;
+    final colors = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final (label, value) in rows)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 130,
+                    child: Text(
+                      label,
+                      style: textTheme.labelSmall?.copyWith(
+                        color: colors.textMuted,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Text(value, style: textTheme.bodyMedium)),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SimilarCarousel extends StatelessWidget {
+  const _SimilarCarousel({required this.medias, required this.onOpen});
+
+  final List<Media> medias;
+  final void Function(Media media)? onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.t.detail.similar,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SizedBox(
+            height: 220,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: medias.length,
+              separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
+              itemBuilder: (context, index) {
+                final media = medias[index];
+                return MediaPosterTile(
+                  media: media,
+                  width: 120,
+                  onTap: () => onOpen?.call(media),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

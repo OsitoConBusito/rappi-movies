@@ -51,6 +51,10 @@ final appRouter = GoRouter(
           type: isTv ? MediaType.tv : MediaType.movie,
           id: id,
           preview: extra is Media ? extra : null,
+          onOpenMedia: (media) => context.push(
+            '/media/${media.type.name}/${media.id}',
+            extra: media,
+          ),
         );
       },
     ),

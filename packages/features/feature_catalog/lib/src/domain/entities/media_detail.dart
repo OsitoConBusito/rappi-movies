@@ -42,18 +42,39 @@ class MediaDetail extends Media {
     required super.genreIds,
     required this.genres,
     required this.cast,
+    this.recommendations = const [],
     super.posterPath,
     super.backdropPath,
     super.releaseDate,
     this.runtime,
     this.tagline,
+    this.director,
+    this.status,
+    this.originalLanguage,
+    this.voteCount = 0,
   });
 
   final List<Genre> genres;
   final List<CastMember> cast;
+  final List<Media> recommendations;
   final int? runtime;
   final String? tagline;
+  final String? director;
+  final String? status;
+  final String? originalLanguage;
+  final int voteCount;
 
   @override
-  List<Object?> get props => [...super.props, genres, cast, runtime, tagline];
+  List<Object?> get props => [
+    ...super.props,
+    genres,
+    cast,
+    recommendations,
+    runtime,
+    tagline,
+    director,
+    status,
+    originalLanguage,
+    voteCount,
+  ];
 }

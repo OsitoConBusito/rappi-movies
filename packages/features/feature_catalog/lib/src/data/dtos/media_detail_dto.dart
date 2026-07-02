@@ -1,3 +1,4 @@
+import 'package:feature_catalog/src/data/dtos/media_dto.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'media_detail_dto.freezed.dart';
@@ -23,7 +24,11 @@ abstract class MediaDetailDto with _$MediaDetailDto {
     @JsonKey(name: 'episode_run_time')
     @Default(<int>[])
     List<int> episodeRunTime,
+    @JsonKey(name: 'original_language') String? originalLanguage,
+    String? status,
+    @JsonKey(name: 'vote_count') @Default(0) int voteCount,
     CreditsDto? credits,
+    RecommendationsDto? recommendations,
   }) = _MediaDetailDto;
 
   factory MediaDetailDto.fromJson(Map<String, dynamic> json) =>
@@ -43,10 +48,33 @@ abstract class GenreDto with _$GenreDto {
 abstract class CreditsDto with _$CreditsDto {
   const factory CreditsDto({
     @Default(<CastMemberDto>[]) List<CastMemberDto> cast,
+    @Default(<CrewMemberDto>[]) List<CrewMemberDto> crew,
   }) = _CreditsDto;
 
   factory CreditsDto.fromJson(Map<String, dynamic> json) =>
       _$CreditsDtoFromJson(json);
+}
+
+@freezed
+abstract class CrewMemberDto with _$CrewMemberDto {
+  const factory CrewMemberDto({
+    required int id,
+    @Default('') String name,
+    @Default('') String job,
+  }) = _CrewMemberDto;
+
+  factory CrewMemberDto.fromJson(Map<String, dynamic> json) =>
+      _$CrewMemberDtoFromJson(json);
+}
+
+@freezed
+abstract class RecommendationsDto with _$RecommendationsDto {
+  const factory RecommendationsDto({
+    @Default(<MediaDto>[]) List<MediaDto> results,
+  }) = _RecommendationsDto;
+
+  factory RecommendationsDto.fromJson(Map<String, dynamic> json) =>
+      _$RecommendationsDtoFromJson(json);
 }
 
 @freezed

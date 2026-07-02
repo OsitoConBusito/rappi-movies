@@ -34,7 +34,7 @@ class CatalogRemoteDataSource {
       '/${_typeSegment(type)}/$id',
       queryParameters: {
         'language': languageCode,
-        'append_to_response': 'credits',
+        'append_to_response': 'credits,recommendations',
       },
       decode: (data) => MediaDetailDto.fromJson(data! as Map<String, dynamic>),
     );

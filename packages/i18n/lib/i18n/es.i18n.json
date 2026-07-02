@@ -15,7 +15,11 @@
     "en": "English"
   },
   "detail": {
-    "cast": "Reparto"
+    "cast": "Reparto",
+    "similar": "Similares",
+    "director": "Director",
+    "language": "Idioma original",
+    "status": "Estado"
   },
   "search": {
     "title": "Buscar",

@@ -42,6 +42,21 @@ extension MediaDetailDtoMapper on MediaDetailDto {
       releaseDate: parseTmdbDate(rawDate),
       runtime: resolvedRuntime,
       tagline: resolvedTagline,
+      director: _directorOf(credits?.crew ?? const []),
+      status: (status ?? '').isEmpty ? null : status,
+      originalLanguage: originalLanguage,
+      voteCount: voteCount,
+      recommendations: (recommendations?.results ?? [])
+          .where((dto) => dto.id != id)
+          .map((dto) => dto.toDomain(type))
+          .toList(),
     );
   }
+}
+
+String? _directorOf(List<CrewMemberDto> crew) {
+  for (final member in crew) {
+    if (member.job == 'Director') return member.name;
+  }
+  return null;
 }
