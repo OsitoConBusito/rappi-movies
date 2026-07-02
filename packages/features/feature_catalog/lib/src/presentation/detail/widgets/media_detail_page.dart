@@ -12,24 +12,113 @@ import 'package:i18n/i18n.dart';
 /// Pantalla de detalle de un título (HU-2): backdrop colapsable, poster con
 /// transición Hero desde el listado, puntuación, géneros, sinopsis y reparto.
 class MediaDetailPage extends ConsumerWidget {
-  const MediaDetailPage({required this.type, required this.id, super.key});
+  const MediaDetailPage({
+    required this.type,
+    required this.id,
+    this.preview,
+    super.key,
+  });
 
   final MediaType type;
   final int id;
 
+  /// Datos del listado (si se navegó desde ahí). Permiten mostrar el poster con
+  /// la transición Hero de inmediato mientras carga el detalle completo.
+  final Media? preview;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(mediaDetailProvider(type, id));
+    final media = preview;
 
     return Scaffold(
       body: detail.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => media == null
+            ? const Center(child: CircularProgressIndicator())
+            : _DetailLoading(preview: media),
         error: (error, _) => _DetailError(
           error: error,
           onRetry: () => ref.invalidate(mediaDetailProvider(type, id)),
         ),
-        data: (media) => _DetailContent(detail: media),
+        data: (loaded) => _DetailContent(detail: loaded),
       ),
+    );
+  }
+}
+
+/// Estado de carga que ya muestra el poster (Hero) + título + puntuación desde
+/// el `preview`, con shimmer para el resto. Da destino inmediato a la
+/// transición Hero al entrar.
+class _DetailLoading extends ConsumerWidget {
+  const _DetailLoading({required this.preview});
+
+  final Media preview;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final imageBaseUrl = ref.watch(appConfigProvider).tmdbImageBaseUrl;
+    final colors = context.colors;
+    final textTheme = Theme.of(context).textTheme;
+
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          expandedHeight: 280,
+          pinned: true,
+          backgroundColor: colors.surface,
+          flexibleSpace: FlexibleSpaceBar(
+            background: _Backdrop(
+              url: preview.backdropPath == null
+                  ? null
+                  : '$imageBaseUrl/w780${preview.backdropPath}',
+              surface: colors.background,
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 110,
+                      child: PosterCard(
+                        imageUrl: preview.posterPath == null
+                            ? null
+                            : '$imageBaseUrl/w342${preview.posterPath}',
+                        heroTag: 'poster-${preview.type.name}-${preview.id}',
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.lg),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(preview.title, style: textTheme.headlineMedium),
+                          const SizedBox(height: AppSpacing.sm),
+                          RatingPill(voteAverage: preview.voteAverage),
+                          const SizedBox(height: AppSpacing.md),
+                          const ShimmerBox(width: 120, height: 12),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                const ShimmerBox(height: 14),
+                const SizedBox(height: AppSpacing.sm),
+                const ShimmerBox(height: 14),
+                const SizedBox(height: AppSpacing.sm),
+                const ShimmerBox(width: 200, height: 14),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

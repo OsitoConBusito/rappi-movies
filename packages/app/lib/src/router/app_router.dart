@@ -18,8 +18,10 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/',
               builder: (context, state) => CatalogHomePage(
-                onOpenMedia: (media) =>
-                    context.push('/media/${media.type.name}/${media.id}'),
+                onOpenMedia: (media) => context.push(
+                  '/media/${media.type.name}/${media.id}',
+                  extra: media,
+                ),
               ),
             ),
           ],
@@ -29,8 +31,10 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/search',
               builder: (context, state) => SearchPage(
-                onOpenMedia: (media) =>
-                    context.push('/media/${media.type.name}/${media.id}'),
+                onOpenMedia: (media) => context.push(
+                  '/media/${media.type.name}/${media.id}',
+                  extra: media,
+                ),
               ),
             ),
           ],
@@ -42,9 +46,11 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final isTv = state.pathParameters['type'] == MediaType.tv.name;
         final id = int.parse(state.pathParameters['id']!);
+        final extra = state.extra;
         return MediaDetailPage(
           type: isTv ? MediaType.tv : MediaType.movie,
           id: id,
+          preview: extra is Media ? extra : null,
         );
       },
     ),
