@@ -136,4 +136,20 @@ aceptó sin discusión.
   red); 24 tests verdes; el build web compila. **Las 3 historias del enunciado
   quedan completas.**
 
+### 2026-07-01 — Pulido de detalle: ficha, similares y parallax
+
+- **Qué se pidió a la IA:** más información en el detalle para que el scroll tenga
+  sentido, y un efecto **parallax** en el backdrop al hacer scroll.
+- **Aporte de la IA:** ficha técnica (director desde `crew`, idioma original,
+  estado, votos) y carrusel **"Similares"** (`recommendations` de TMDB, con
+  navegación y Hero); parallax del backdrop (default de `FlexibleSpaceBar`) +
+  `stretch`/zoom al over-scroll. También el fix del Hero al **entrar** (poster
+  desde el `preview` durante la carga).
+- **Decisión (deep-link):** el `Media` se pasa como `extra` en la navegación
+  **solo como optimización** para que el Hero tenga poster en el frame 0. La ruta
+  es 100% funcional con `type + id` (deep-link / recarga → cae al loading y
+  fetchea); `extra` nunca es dependencia de datos. Se descartó leer el preview de
+  Drift porque su lectura async rompería el timing del Hero.
+- **Verificación:** 24 tests verdes; `melos analyze` limpio; el build web compila.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->
