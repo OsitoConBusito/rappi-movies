@@ -15,6 +15,7 @@ Formato basado en [Michael Nygard](https://cognitect.com/blog/2011/11/15/documen
 | 0005 | go_router en lugar de fluro                        | Aceptado  |
 | 0006 | Result (fpdart) para manejo de errores             | Aceptado  |
 | 0007 | Estrategia de detección de conectividad            | Aceptado  |
+| 0008 | slang para internacionalización (i18n)             | Aceptado  |
 
 ## Estados posibles
 `Propuesto` → `Aceptado` → (`Deprecado` | `Reemplazado por ADR-XXXX`)

@@ -71,4 +71,17 @@ aceptó sin discusión.
   de páginas y offline-first) + widget test del app; `melos analyze`/`test` verdes; el
   build web compila el grafo completo con el token real.
 
+### 2026-07-01 — i18n con slang (fundación cross-cutting)
+
+- **Qué se pidió a la IA:** añadir internacionalización con **slang** (no se había
+  considerado en el plan), al menos español e inglés.
+- **Aporte de la IA:** paquete compartido `packages/i18n` con slang; traducciones `es`
+  (base) + `en`; `TranslationProvider` + `context.t`; migración de los strings de M1;
+  mapeo `Failure`→i18n en presentación; conexión de **RN-4** (idioma de los datos de TMDB
+  al locale activo). ADR-0008.
+- **Decisiones humanas:** slang (preferencia del autor), base `es` + `en`, paquete `i18n`
+  compartido. Generación por el CLI de slang (no build_runner) para acceso síncrono.
+- **Verificación:** tests de traducciones + suite completa (15) verde; `melos analyze`
+  limpio; build previo del catálogo intacto.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->
