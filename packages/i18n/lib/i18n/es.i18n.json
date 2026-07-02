@@ -27,7 +27,8 @@
     "search": "Buscar"
   },
   "offline": {
-    "banner": "Sin conexión — mostrando contenido guardado"
+    "banner": "Sin conexión — mostrando contenido guardado",
+    "restored": "Conexión restaurada"
   },
   "errors": {
     "network": "Sin conexión a internet.",

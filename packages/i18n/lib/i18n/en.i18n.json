@@ -27,7 +27,8 @@
     "search": "Search"
   },
   "offline": {
-    "banner": "Offline — showing saved content"
+    "banner": "Offline — showing saved content",
+    "restored": "Connection restored"
   },
   "errors": {
     "network": "No internet connection.",

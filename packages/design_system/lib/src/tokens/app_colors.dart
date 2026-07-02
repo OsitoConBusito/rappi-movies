@@ -27,6 +27,7 @@ abstract final class MarqueePalette {
 
   // Feedback (compartido)
   static const Color error = Color(0xFFE5484D);
+  static const Color success = Color(0xFF35C77F);
 }
 
 /// Tokens de color semánticos de MARQUEE, expuestos como [ThemeExtension] para
