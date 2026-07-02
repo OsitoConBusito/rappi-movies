@@ -152,4 +152,19 @@ aceptó sin discusión.
   Drift porque su lectura async rompería el timing del Hero.
 - **Verificación:** 24 tests verdes; `melos analyze` limpio; el build web compila.
 
+### 2026-07-02 — Tema a demanda, "Acerca de" y responsive tablet
+
+- **Qué se pidió a la IA:** quitar el buscador del app bar, un **toggle de tema**
+  a demanda, un tercer tab **"Acerca de"** con el autor y su app publicada
+  (gigbook), **responsive tablet**, y capturas en el README.
+- **Aporte de la IA:**
+  - `ThemeModeController` (en `core`, persistente) + toggle en el header (que
+    reemplaza el icono de búsqueda, ya redundante con el tab).
+  - Tab **Acerca de** con enlaces a gigbook (web / App Store / Play Store) vía
+    `url_launcher`.
+  - **Responsive:** breakpoints + centrado de contenido con ancho máximo y grid
+    de búsqueda adaptable (3/4/5 columnas), coherente con el diseño.
+  - Sección de capturas en el README.
+- **Verificación:** 24 tests verdes; `melos analyze` limpio.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->

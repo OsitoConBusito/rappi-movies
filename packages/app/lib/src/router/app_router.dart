@@ -1,17 +1,16 @@
-import 'package:app/src/widgets/offline_banner.dart';
+import 'package:app/src/pages/about_page.dart';
+import 'package:app/src/widgets/adaptive_nav_shell.dart';
 import 'package:feature_catalog/feature_catalog.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:i18n/i18n.dart';
 
-/// Router de la app. Un `StatefulShellRoute` provee el bottom nav (Inicio /
-/// Buscar) preservando el estado de cada rama; el detalle se abre como ruta de
-/// nivel superior (cubre el bottom nav).
+/// Router de la app. Un `StatefulShellRoute` da la navegación **adaptativa**
+/// (bottom nav / rail / sidebar) preservando el estado de cada rama; el detalle
+/// se abre como ruta de nivel superior.
 final appRouter = GoRouter(
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
-          _ScaffoldWithNavBar(navigationShell: navigationShell),
+          AdaptiveNavShell(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
           routes: [
@@ -39,6 +38,14 @@ final appRouter = GoRouter(
             ),
           ],
         ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/about',
+              builder: (context, state) => const AboutPage(),
+            ),
+          ],
+        ),
       ],
     ),
     GoRoute(
@@ -60,44 +67,3 @@ final appRouter = GoRouter(
     ),
   ],
 );
-
-class _ScaffoldWithNavBar extends StatelessWidget {
-  const _ScaffoldWithNavBar({required this.navigationShell});
-
-  final StatefulNavigationShell navigationShell;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-
-    return Scaffold(
-      // SafeArea en el shell: mantiene el banner (y el contenido) por debajo de
-      // la status bar. El SafeArea interno de las páginas queda como no-op.
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            const OfflineBanner(),
-            Expanded(child: navigationShell),
-          ],
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: navigationShell.goBranch,
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home_rounded),
-            label: t.nav.home,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.search_outlined),
-            selectedIcon: const Icon(Icons.search_rounded),
-            label: t.nav.search,
-          ),
-        ],
-      ),
-    );
-  }
-}

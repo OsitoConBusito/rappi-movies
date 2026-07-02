@@ -18,6 +18,18 @@ Ejercicio técnico. El uso de IA está documentado en [`docs/ai-usage.md`](docs/
 
 ---
 
+## 📸 Capturas
+
+| Catálogo | Detalle | Búsqueda |
+|:---:|:---:|:---:|
+| ![Catálogo](docs/screenshots/catalog-home.png) | ![Detalle](docs/screenshots/detail.png) | ![Búsqueda](docs/screenshots/search.png) |
+
+| Sin conexión | Acerca de | Tema claro |
+|:---:|:---:|:---:|
+| ![Sin conexión](docs/screenshots/offline.png) | ![Acerca de](docs/screenshots/about.png) | ![Tema claro](docs/screenshots/light.png) |
+
+---
+
 ## 🚀 Puesta en marcha
 
 ### Requisitos

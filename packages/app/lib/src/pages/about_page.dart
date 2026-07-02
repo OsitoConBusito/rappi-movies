@@ -1,0 +1,231 @@
+import 'dart:async';
+
+import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i18n/i18n.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+/// "Acerca de": ajustes de la app (tema e idioma) y la info del autor y su
+/// aplicación publicada, gigbook.
+class AboutPage extends ConsumerWidget {
+  const AboutPage({super.key});
+
+  static const _developer = 'Juan Cano';
+  static const _webUrl = 'https://gigbook.app';
+  static const _appStoreUrl =
+      'https://apps.apple.com/co/app/gigbook/id6774455071';
+  static const _playStoreUrl =
+      'https://play.google.com/store/apps/details?id=app.gigbook.gigbook_app';
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final colors = context.colors;
+    final textTheme = Theme.of(context).textTheme;
+    final themeMode = ref.watch(themeModeControllerProvider);
+    final locale = ref.watch(localeControllerProvider);
+
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          children: [
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'MARQUEE',
+              style: textTheme.displayMedium?.copyWith(color: colors.accent),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            _SettingRow(
+              label: t.theme.title,
+              child: _Segmented<ThemeMode>(
+                options: [
+                  (ThemeMode.light, t.theme.light),
+                  (ThemeMode.dark, t.theme.dark),
+                ],
+                selected: themeMode,
+                onSelected: (mode) => unawaited(
+                  ref.read(themeModeControllerProvider.notifier).setMode(mode),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _SettingRow(
+              label: t.language.label,
+              child: _Segmented<AppLocale>(
+                options: [
+                  (AppLocale.es, t.language.es),
+                  (AppLocale.en, t.language.en),
+                ],
+                selected: locale,
+                onSelected: (value) => unawaited(
+                  ref.read(localeControllerProvider.notifier).setLocale(value),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxxl),
+            _Label(text: t.about.madeBy),
+            const SizedBox(height: AppSpacing.sm),
+            Text(_developer, style: textTheme.headlineMedium),
+            Text(
+              t.about.role,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxxl),
+            _Label(text: t.about.otherApp),
+            const SizedBox(height: AppSpacing.sm),
+            Text('gigbook', style: textTheme.titleLarge),
+            const SizedBox(height: AppSpacing.md),
+            _LinkTile(icon: Icons.language, label: t.about.web, url: _webUrl),
+            const SizedBox(height: AppSpacing.sm),
+            _LinkTile(
+              icon: Icons.apple,
+              label: t.about.appStore,
+              url: _appStoreUrl,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _LinkTile(
+              icon: Icons.shop_2_outlined,
+              label: t.about.playStore,
+              url: _playStoreUrl,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingRow extends StatelessWidget {
+  const _SettingRow({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.titleMedium),
+        child,
+      ],
+    );
+  }
+}
+
+class _Segmented<T> extends StatelessWidget {
+  const _Segmented({
+    required this.options,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final List<(T, String)> options;
+  final T selected;
+  final void Function(T value) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final onAccent = Theme.of(context).colorScheme.onPrimary;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final (value, label) in options)
+            GestureDetector(
+              onTap: () => onSelected(value),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: value == selected ? colors.accent : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: value == selected ? onAccent : colors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Label extends StatelessWidget {
+  const _Label({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text.toUpperCase(),
+      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+        color: context.colors.textMuted,
+        letterSpacing: 1,
+      ),
+    );
+  }
+}
+
+class _LinkTile extends StatelessWidget {
+  const _LinkTile({required this.icon, required this.label, required this.url});
+
+  final IconData icon;
+  final String label;
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Material(
+      color: colors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        onTap: () => unawaited(
+          launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Row(
+            children: [
+              Icon(icon, color: colors.accent, size: 20),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              Icon(
+                Icons.open_in_new_rounded,
+                size: 16,
+                color: colors.textMuted,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

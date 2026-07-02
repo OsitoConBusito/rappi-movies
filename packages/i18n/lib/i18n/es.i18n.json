@@ -7,7 +7,9 @@
     "movies": "Películas",
     "series": "Series",
     "popular": "Popular",
-    "topRated": "Top Rated"
+    "topRated": "Top Rated",
+    "featured": "Destacada hoy",
+    "viewDetail": "Ver detalle"
   },
   "language": {
     "label": "Idioma",
@@ -35,7 +37,22 @@
   },
   "nav": {
     "home": "Inicio",
-    "search": "Buscar"
+    "search": "Buscar",
+    "about": "Acerca de"
+  },
+  "theme": {
+    "toggle": "Cambiar tema",
+    "title": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "about": {
+    "madeBy": "Hecho por",
+    "role": "Desarrollador Flutter",
+    "otherApp": "Mi app en tiendas",
+    "web": "Sitio web",
+    "appStore": "App Store",
+    "playStore": "Google Play"
   },
   "offline": {
     "banner": "Sin conexión — mostrando contenido guardado",

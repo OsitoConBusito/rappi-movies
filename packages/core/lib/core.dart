@@ -12,3 +12,4 @@ export 'src/core_providers.dart';
 export 'src/error/failure.dart';
 export 'src/logging/app_logger.dart';
 export 'src/network/api_client.dart';
+export 'src/theme/theme_mode_controller.dart';

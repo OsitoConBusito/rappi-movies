@@ -1,6 +1,7 @@
 import 'package:app/src/app.dart';
 import 'package:core/core.dart';
 import 'package:feature_catalog/feature_catalog.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n/i18n.dart';
@@ -45,6 +46,12 @@ void main() {
   testWidgets(
     'given the app, when it starts, then it renders the catalog home shell',
     (tester) async {
+      // Tamaño móvil: fija el layout adaptativo en bottom nav + header MARQUEE.
+      tester.view.physicalSize = const Size(390, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         TranslationProvider(
           child: ProviderScope(
