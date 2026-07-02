@@ -20,13 +20,26 @@ Ejercicio técnico. El uso de IA está documentado en [`docs/ai-usage.md`](docs/
 
 ## 📸 Capturas
 
-| Catálogo | Detalle | Búsqueda |
-|:---:|:---:|:---:|
-| ![Catálogo](docs/screenshots/catalog-home.png) | ![Detalle](docs/screenshots/detail.png) | ![Búsqueda](docs/screenshots/search.png) |
+Diseño responsive en los 4 breakpoints, con navegación adaptativa (bottom nav
+en móvil, rail en tablet, sidebar extendido en escritorio) y temas claro/oscuro.
 
-| Sin conexión | Acerca de | Tema claro |
-|:---:|:---:|:---:|
-| ![Sin conexión](docs/screenshots/offline.png) | ![Acerca de](docs/screenshots/about.png) | ![Tema claro](docs/screenshots/light.png) |
+### Catálogo
+
+| Escritorio — sidebar + hero (tema claro) | Móvil — bottom nav + hero (tema oscuro) |
+|:---:|:---:|
+| ![Catálogo en escritorio](docs/screenshots/catalog-desktop.png) | ![Catálogo en móvil](docs/screenshots/catalog-mobile.png) |
+
+### Detalle y búsqueda
+
+| Detalle — layout a dos columnas | Búsqueda con filtros |
+|:---:|:---:|
+| ![Detalle](docs/screenshots/detail-desktop.png) | ![Búsqueda](docs/screenshots/search-mobile.png) |
+
+### Acerca de — tema e idioma a demanda
+
+| Tablet — rail (tema claro) | Móvil (tema claro) |
+|:---:|:---:|
+| ![Acerca de en tablet](docs/screenshots/about-tablet.png) | ![Acerca de en móvil](docs/screenshots/about-mobile.png) |
 
 ---
 
