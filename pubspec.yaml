@@ -10,6 +10,7 @@ workspace:
   - packages/app
   - packages/core
   - packages/design_system
+  - packages/i18n
   - packages/features/feature_catalog
 
 dev_dependencies:
@@ -29,3 +30,6 @@ melos:
     generate:
       description: Corre build_runner en los paquetes que usan code-gen.
       run: melos exec --depends-on=build_runner -- dart run build_runner build
+    i18n:
+      description: Genera las traducciones (slang) del paquete i18n.
+      run: melos exec --scope=i18n -- dart run slang

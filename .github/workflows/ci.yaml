@@ -20,6 +20,9 @@ jobs:
       - name: Resolver dependencias (pub workspace)
         run: flutter pub get
 
+      - name: Traducciones (slang)
+        run: dart run melos run i18n
+
       - name: Generar código (build_runner)
         run: dart run melos run generate
 

@@ -18,7 +18,11 @@ dependencies:
     path: ../features/feature_catalog
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_riverpod: ^3.3.2
+  i18n:
+    path: ../i18n
 
 dev_dependencies:
   flutter_test:

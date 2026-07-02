@@ -3,6 +3,7 @@ import 'package:core/core.dart';
 import 'package:feature_catalog/feature_catalog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:i18n/i18n.dart';
 
 class _FakeCatalogRepository implements CatalogRepository {
   @override
@@ -35,13 +36,15 @@ void main() {
     'given the app, when it starts, then it renders the catalog home shell',
     (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            catalogRepositoryProvider.overrideWithValue(
-              _FakeCatalogRepository(),
-            ),
-          ],
-          child: const MarqueeApp(),
+        TranslationProvider(
+          child: ProviderScope(
+            overrides: [
+              catalogRepositoryProvider.overrideWithValue(
+                _FakeCatalogRepository(),
+              ),
+            ],
+            child: const MarqueeApp(),
+          ),
         ),
       );
 

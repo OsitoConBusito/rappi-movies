@@ -1,0 +1,21 @@
+name: i18n
+description: Traducciones (slang) compartidas por la app y las features.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.44.0"
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  slang: ^4.18.0
+  slang_flutter: ^4.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.3.0

@@ -1,0 +1,20 @@
+{
+  "common": {
+    "retry": "Reintentar",
+    "seeAll": "Ver todo"
+  },
+  "catalog": {
+    "movies": "Películas",
+    "series": "Series",
+    "popular": "Popular",
+    "topRated": "Top Rated"
+  },
+  "errors": {
+    "network": "Sin conexión a internet.",
+    "notFound": "Recurso no encontrado.",
+    "server": "Error del servidor de TMDB.",
+    "cache": "Error leyendo la caché local.",
+    "unknown": "Ocurrió un error inesperado.",
+    "loadFailed": "No pudimos cargar esto ahora."
+  }
+}
