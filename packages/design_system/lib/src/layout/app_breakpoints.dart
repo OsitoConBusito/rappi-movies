@@ -1,41 +1,29 @@
-import 'package:flutter/widgets.dart';
+/// Clase de dispositivo según el ancho disponible (mobile-first).
+enum DeviceClass { mobile, tabletPortrait, tabletLandscape, desktop }
 
-/// Breakpoints responsive de MARQUEE.
+/// Breakpoints responsive de MARQUEE. Los umbrales caen entre los anchos de
+/// frame del diseño (390 / 834 / 1194 / 1360).
 abstract final class AppBreakpoints {
-  static const double tablet = 600;
-  static const double desktop = 1000;
+  static const double tabletPortrait = 600;
+  static const double tabletLandscape = 900;
+  static const double desktop = 1200;
 
-  /// Ancho máximo del contenido: en pantallas grandes se centra en vez de
-  /// estirarse a todo lo ancho.
-  static const double maxContentWidth = 920;
+  /// Ancho del sidebar (desktop) y del icon rail (tablet landscape).
+  static const double sidebarWidth = 250;
+  static const double railWidth = 88;
 
-  /// Columnas para grids de posters según el ancho disponible (móvil 3,
-  /// tablet 4, desktop 5) — coincide con el diseño.
-  static int gridColumns(double width) {
-    if (width >= desktop) return 5;
-    if (width >= tablet) return 4;
-    return 3;
+  static DeviceClass of(double width) {
+    if (width >= desktop) return DeviceClass.desktop;
+    if (width >= tabletLandscape) return DeviceClass.tabletLandscape;
+    if (width >= tabletPortrait) return DeviceClass.tabletPortrait;
+    return DeviceClass.mobile;
   }
-}
 
-/// Centra y limita el ancho del contenido en pantallas grandes.
-class CenteredContent extends StatelessWidget {
-  const CenteredContent({
-    required this.child,
-    this.maxWidth = AppBreakpoints.maxContentWidth,
-    super.key,
-  });
-
-  final Widget child;
-  final double maxWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: child,
-      ),
-    );
-  }
+  /// Columnas de grid de posters por breakpoint (2 / 4 / 5 / 6), según diseño.
+  static int gridColumns(double width) => switch (of(width)) {
+    DeviceClass.desktop => 6,
+    DeviceClass.tabletLandscape => 5,
+    DeviceClass.tabletPortrait => 4,
+    DeviceClass.mobile => 2,
+  };
 }

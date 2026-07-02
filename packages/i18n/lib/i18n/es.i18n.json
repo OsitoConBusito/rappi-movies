@@ -39,7 +39,10 @@
     "about": "Acerca de"
   },
   "theme": {
-    "toggle": "Cambiar tema"
+    "toggle": "Cambiar tema",
+    "title": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro"
   },
   "about": {
     "madeBy": "Hecho por",

@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i18n/i18n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Pantalla "Acerca de": autor de la app y su aplicación publicada, gigbook.
-class AboutPage extends StatelessWidget {
+/// "Acerca de": ajustes de la app (tema e idioma) y la info del autor y su
+/// aplicación publicada, gigbook.
+class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
   static const _developer = 'Juan Cano';
@@ -17,10 +20,12 @@ class AboutPage extends StatelessWidget {
       'https://play.google.com/store/apps/details?id=app.gigbook.gigbook_app';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final colors = context.colors;
     final textTheme = Theme.of(context).textTheme;
+    final themeMode = ref.watch(themeModeControllerProvider);
+    final locale = ref.watch(localeControllerProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -33,6 +38,34 @@ class AboutPage extends StatelessWidget {
               style: textTheme.displayMedium?.copyWith(color: colors.accent),
             ),
             const SizedBox(height: AppSpacing.xxl),
+            _SettingRow(
+              label: t.theme.title,
+              child: _Segmented<ThemeMode>(
+                options: [
+                  (ThemeMode.light, t.theme.light),
+                  (ThemeMode.dark, t.theme.dark),
+                ],
+                selected: themeMode,
+                onSelected: (mode) => unawaited(
+                  ref.read(themeModeControllerProvider.notifier).setMode(mode),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            _SettingRow(
+              label: t.language.label,
+              child: _Segmented<AppLocale>(
+                options: [
+                  (AppLocale.es, t.language.es),
+                  (AppLocale.en, t.language.en),
+                ],
+                selected: locale,
+                onSelected: (value) => unawaited(
+                  ref.read(localeControllerProvider.notifier).setLocale(value),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxxl),
             _Label(text: t.about.madeBy),
             const SizedBox(height: AppSpacing.sm),
             Text(_developer, style: textTheme.headlineMedium),
@@ -62,6 +95,76 @@ class AboutPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SettingRow extends StatelessWidget {
+  const _SettingRow({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.titleMedium),
+        child,
+      ],
+    );
+  }
+}
+
+class _Segmented<T> extends StatelessWidget {
+  const _Segmented({
+    required this.options,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final List<(T, String)> options;
+  final T selected;
+  final void Function(T value) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final onAccent = Theme.of(context).colorScheme.onPrimary;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final (value, label) in options)
+            GestureDetector(
+              onTap: () => onSelected(value),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: value == selected ? colors.accent : Colors.transparent,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: value == selected ? onAccent : colors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

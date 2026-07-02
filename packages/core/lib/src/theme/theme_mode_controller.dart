@@ -26,6 +26,9 @@ class ThemeModeController extends Notifier<ThemeMode> {
   Future<void> toggle() =>
       _set(state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark);
 
+  /// Fija un modo concreto.
+  Future<void> setMode(ThemeMode mode) => _set(mode);
+
   Future<void> _set(ThemeMode mode) async {
     state = mode;
     final prefs = await SharedPreferences.getInstance();

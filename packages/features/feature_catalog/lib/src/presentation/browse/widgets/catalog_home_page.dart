@@ -2,9 +2,7 @@ import 'package:design_system/design_system.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
 import 'package:feature_catalog/src/presentation/browse/providers/selected_media_type.dart';
 import 'package:feature_catalog/src/presentation/browse/widgets/catalog_carousel.dart';
-import 'package:feature_catalog/src/presentation/browse/widgets/language_selector.dart';
 import 'package:feature_catalog/src/presentation/browse/widgets/media_type_toggle.dart';
-import 'package:feature_catalog/src/presentation/browse/widgets/theme_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i18n/i18n.dart';
@@ -30,16 +28,7 @@ class CatalogHomePage extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('MARQUEE', style: textTheme.headlineMedium),
-                  const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [ThemeToggle(), LanguageSelector()],
-                  ),
-                ],
-              ),
+              child: Text('MARQUEE', style: textTheme.headlineMedium),
             ),
             const SizedBox(height: AppSpacing.lg),
             const Padding(

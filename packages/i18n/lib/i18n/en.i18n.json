@@ -39,7 +39,10 @@
     "about": "About"
   },
   "theme": {
-    "toggle": "Toggle theme"
+    "toggle": "Toggle theme",
+    "title": "Theme",
+    "light": "Light",
+    "dark": "Dark"
   },
   "about": {
     "madeBy": "Made by",
