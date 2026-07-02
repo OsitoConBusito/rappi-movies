@@ -14,6 +14,18 @@
     "es": "Español",
     "en": "English"
   },
+  "detail": {
+    "cast": "Reparto"
+  },
+  "search": {
+    "title": "Buscar",
+    "hint": "Busca películas y series",
+    "comingSoon": "El buscador llega pronto."
+  },
+  "nav": {
+    "home": "Inicio",
+    "search": "Buscar"
+  },
   "errors": {
     "network": "Sin conexión a internet.",
     "notFound": "Recurso no encontrado.",

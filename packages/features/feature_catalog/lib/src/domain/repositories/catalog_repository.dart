@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
+import 'package:feature_catalog/src/domain/entities/media_detail.dart';
 
 /// Contrato de acceso al catálogo, diseñado **reactivo** (single-source-of-
 /// truth): [watchCategory] emite la lista desde la caché local y
@@ -23,5 +24,11 @@ abstract interface class CatalogRepository {
     required MediaType type,
     required MediaCategory category,
     required int page,
+  });
+
+  /// Devuelve el detalle de un título (desde la caché si ya se cargó antes).
+  Future<Either<Failure, MediaDetail>> getDetail({
+    required MediaType type,
+    required int id,
   });
 }

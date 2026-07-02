@@ -9,3 +9,5 @@ export 'src/domain/entities/media.dart';
 export 'src/domain/entities/media_detail.dart';
 export 'src/domain/repositories/catalog_repository.dart';
 export 'src/presentation/browse/widgets/catalog_home_page.dart';
+export 'src/presentation/detail/widgets/media_detail_page.dart';
+export 'src/presentation/search/widgets/search_page.dart';

@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:feature_catalog/src/data/dtos/media_detail_dto.dart';
 import 'package:feature_catalog/src/data/dtos/media_page_dto.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
 
@@ -22,6 +23,20 @@ class CatalogRemoteDataSource {
       path,
       queryParameters: {'page': page, 'language': languageCode},
       decode: (data) => MediaPageDto.fromJson(data! as Map<String, dynamic>),
+    );
+  }
+
+  Future<Either<Failure, MediaDetailDto>> getDetail({
+    required MediaType type,
+    required int id,
+  }) {
+    return _apiClient.get<MediaDetailDto>(
+      '/${_typeSegment(type)}/$id',
+      queryParameters: {
+        'language': languageCode,
+        'append_to_response': 'credits',
+      },
+      decode: (data) => MediaDetailDto.fromJson(data! as Map<String, dynamic>),
     );
   }
 

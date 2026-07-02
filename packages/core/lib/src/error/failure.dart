@@ -1,7 +1,10 @@
 /// Falla de dominio esperada. Las capas de datos traducen los errores de
 /// infraestructura (Dio, Drift) a una de estas variantes, de modo que el
 /// dominio y la presentación nunca vean una excepción de infraestructura.
-sealed class Failure {
+///
+/// Implementa [Exception] para poder propagarse como error de un `AsyncValue`
+/// sin violar la regla `only_throw_errors`.
+sealed class Failure implements Exception {
   const Failure(this.message);
 
   /// Mensaje accionable para logging o para mostrar en la UI.

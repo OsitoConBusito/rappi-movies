@@ -1,6 +1,8 @@
 import 'package:core/core.dart';
 import 'package:feature_catalog/src/data/datasources/catalog_remote_data_source.dart';
 import 'package:feature_catalog/src/data/repositories/catalog_repository_impl.dart';
+import 'package:feature_catalog/src/domain/entities/media.dart';
+import 'package:feature_catalog/src/domain/entities/media_detail.dart';
 import 'package:feature_catalog/src/domain/repositories/catalog_repository.dart';
 import 'package:i18n/i18n.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,3 +27,13 @@ CatalogRemoteDataSource catalogRemoteDataSource(Ref ref) =>
 @Riverpod(keepAlive: true)
 CatalogRepository catalogRepository(Ref ref) =>
     CatalogRepositoryImpl(ref.watch(catalogRemoteDataSourceProvider));
+
+/// Detalle de un título. Los estados de carga/error se manejan con AsyncValue;
+/// el fallo se propaga como error (Failure es Exception).
+@riverpod
+Future<MediaDetail> mediaDetail(Ref ref, MediaType type, int id) async {
+  final result = await ref
+      .watch(catalogRepositoryProvider)
+      .getDetail(type: type, id: id);
+  return result.fold((failure) => throw failure, (detail) => detail);
+}

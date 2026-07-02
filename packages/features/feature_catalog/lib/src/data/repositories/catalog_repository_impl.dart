@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:feature_catalog/src/data/datasources/catalog_remote_data_source.dart';
+import 'package:feature_catalog/src/data/mappers/media_detail_mapper.dart';
 import 'package:feature_catalog/src/data/mappers/media_mapper.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
+import 'package:feature_catalog/src/domain/entities/media_detail.dart';
 import 'package:feature_catalog/src/domain/repositories/catalog_repository.dart';
 
 /// Implementación remote-only del catálogo con una **caché reactiva en
@@ -18,6 +20,7 @@ class CatalogRepositoryImpl implements CatalogRepository {
   final Map<String, List<Media>> _cache = {};
   final Map<String, StreamController<Either<Failure, List<Media>>>>
   _controllers = {};
+  final Map<String, MediaDetail> _detailCache = {};
 
   String _keyOf(MediaType type, MediaCategory category) =>
       '${type.name}_${category.name}';
@@ -75,5 +78,22 @@ class CatalogRepositoryImpl implements CatalogRepository {
         return Right(pageDto.page < pageDto.totalPages);
       },
     );
+  }
+
+  @override
+  Future<Either<Failure, MediaDetail>> getDetail({
+    required MediaType type,
+    required int id,
+  }) async {
+    final key = '${type.name}_$id';
+    final cached = _detailCache[key];
+    if (cached != null) return Right(cached);
+
+    final result = await _remote.getDetail(type: type, id: id);
+    return result.map((dto) {
+      final detail = dto.toDomain(type);
+      _detailCache[key] = detail;
+      return detail;
+    });
   }
 }

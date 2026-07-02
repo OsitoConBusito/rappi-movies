@@ -16,12 +16,12 @@ extension MediaDtoMapper on MediaDto {
       genreIds: genreIds,
       posterPath: posterPath,
       backdropPath: backdropPath,
-      releaseDate: _parseDate(rawDate),
+      releaseDate: parseTmdbDate(rawDate),
     );
   }
 }
 
-DateTime? _parseDate(String? raw) {
+DateTime? parseTmdbDate(String? raw) {
   if (raw == null || raw.isEmpty) return null;
   return DateTime.tryParse(raw);
 }

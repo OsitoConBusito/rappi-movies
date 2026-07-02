@@ -11,7 +11,10 @@ import 'package:i18n/i18n.dart';
 /// Pantalla principal del catálogo (HU-1): toggle Movies/Series y las secciones
 /// Popular y Top Rated como carruseles del tipo seleccionado.
 class CatalogHomePage extends ConsumerWidget {
-  const CatalogHomePage({super.key});
+  const CatalogHomePage({this.onOpenMedia, super.key});
+
+  /// Callback al seleccionar un título; lo cablea el router del app-shell.
+  final void Function(Media media)? onOpenMedia;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,12 +59,14 @@ class CatalogHomePage extends ConsumerWidget {
               type: type,
               category: MediaCategory.popular,
               title: t.catalog.popular,
+              onOpen: onOpenMedia,
             ),
             const SizedBox(height: AppSpacing.xl),
             CatalogCarousel(
               type: type,
               category: MediaCategory.topRated,
               title: t.catalog.topRated,
+              onOpen: onOpenMedia,
             ),
             const SizedBox(height: AppSpacing.xl),
           ],

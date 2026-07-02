@@ -14,6 +14,18 @@
     "es": "Español",
     "en": "English"
   },
+  "detail": {
+    "cast": "Cast"
+  },
+  "search": {
+    "title": "Search",
+    "hint": "Search movies and series",
+    "comingSoon": "Search is coming soon."
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Search"
+  },
   "errors": {
     "network": "No internet connection.",
     "notFound": "Resource not found.",
