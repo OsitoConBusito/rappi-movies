@@ -167,4 +167,64 @@ aceptó sin discusión.
   - Sección de capturas en el README.
 - **Verificación:** 24 tests verdes; `melos analyze` limpio.
 
+### 2026-07-02 — Rediseño responsive completo (4 breakpoints), shell adaptativo y detalle a dos columnas
+
+- **Qué se pidió a la IA:** el responsive de tablet del punto anterior era
+  "ligero" (centrado + ancho máximo), no lo que proponía el diseño de Claude
+  Design revisado en la sesión anterior. Se pidió implementar los **4
+  breakpoints tal cual el diseño**: navegación adaptativa, hero destacado,
+  grids en tablet/desktop y detalle a dos columnas; además mover tema/idioma
+  a "Acerca de" y animar la navegación inferior.
+- **Aporte de la IA:**
+  - `AppBreakpoints` (móvil/tablet portrait/tablet landscape/desktop) en el
+    design system.
+  - `AdaptiveNavShell`: bottom nav con píldora deslizante (móvil), rail
+    (tablet), sidebar extendido (desktop).
+  - `FeaturedHero` ("Featured Tonight", aspect-ratio 4:5→21:9) y
+    `CatalogSectionView` (carrusel en móvil, grid 4/5/6 columnas en
+    tablet/desktop).
+  - Detalle a **dos columnas** (sinopsis/reparto | ficha técnica) en
+    tabletLandscape/desktop.
+  - `ThemeModeController` e idioma movidos a "Acerca de", con persistencia
+    (ya existente para ambos).
+- **Fix de por medio:** Drift en web necesita `DriftWebOptions` explícito
+  (`sqlite3.wasm` + `drift_worker.js`); sin eso lanzaba un runtime error solo
+  reproducible en Chrome, no en `flutter build web` (que solo valida
+  compilación).
+- **Verificación:** `analyze` limpio, todos los tests verdes, `flutter build
+  web` compila; se fundió a `main` con CI en verde.
+
+### 2026-07-02 — SegmentedPills, scroll infinito en tablet/desktop, fixes y capturas
+
+- **Qué se pidió a la IA:** en desktop el scroll no paginaba (bug real
+  reportado con capturas); además, unificar la animación de los controles
+  segmentados (tema/idioma en "Acerca de" y el toggle Películas/Series) con
+  una píldora deslizante, del mismo ancho, con iconos.
+- **Aporte de la IA:**
+  - **Fix scroll infinito:** los grids de tablet/desktop van con
+    `shrinkWrap` dentro del `ListView` de la página (no tienen scroll
+    propio), así que `loadMore()` nunca se disparaba ahí. Se añadió un
+    `ScrollController` a nivel de página que pagina la última sección al
+    acercarse al final; en móvil sigue paginando cada carrusel por su
+    scroll horizontal.
+  - **`SegmentedPills`** (nuevo componente del design system): píldora
+    dorada que se desliza (`AnimatedAlign`/`TweenAnimationBuilder` +
+    `easeOutBack`), segmentos de igual ancho, iconos opcionales. Reemplaza
+    los controles ad-hoc de "Acerca de" y el toggle de catálogo.
+  - **Fix de carrera:** al cambiar Películas/Series el provider de una
+    sección se disponía mientras un `_refresh` seguía en vuelo; el `await`
+    intentaba escribir `state` sobre un `Ref` ya destruido
+    (`Cannot use Ref after disposed`). Se añadió `if (!ref.mounted) return;`
+    tras el gap asíncrono.
+  - **Fix de layout:** un primer intento de igualar el ancho de los pills
+    con `ConstrainedBox(minWidth:)` reventaba dentro de un `Row` (ancho
+    infinito) — se cambió a un ancho fijo (`width`).
+  - Capturas reales de la app (Chrome DevTools, varios breakpoints/temas)
+    curadas y enlazadas en el README.
+- **Test añadido:** `segmented_pills_test.dart` en `design_system` — dado un
+  valor seleccionado, el segmento correspondiente se marca `selected` en
+  semántica; al tocar el otro segmento, `onSelected` reporta su valor.
+- **Verificación:** `analyze` limpio, todos los tests verdes (incluye el
+  nuevo), `flutter build web` compila; pusheado a `main`.
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->

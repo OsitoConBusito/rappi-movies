@@ -127,38 +127,39 @@ class _Segment<T> extends StatelessWidget {
     final baseStyle = textStyle ?? Theme.of(context).textTheme.labelLarge;
     final targetColor = active ? onAccent : colors.textSecondary;
 
-    return Semantics(
-      button: true,
-      selected: active,
-      label: option.label,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: TweenAnimationBuilder<Color?>(
-          duration: SegmentedPills.slideDuration,
-          curve: Curves.easeOut,
-          tween: ColorTween(end: targetColor),
-          builder: (context, color, _) => Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-              vertical: AppSpacing.sm,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (option.icon != null) ...[
-                  Icon(option.icon, size: iconSize, color: color),
-                  const SizedBox(width: AppSpacing.xs),
-                ],
-                Flexible(
-                  child: Text(
-                    option.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: baseStyle?.copyWith(color: color),
+    return MergeSemantics(
+      child: Semantics(
+        button: true,
+        selected: active,
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: TweenAnimationBuilder<Color?>(
+            duration: SegmentedPills.slideDuration,
+            curve: Curves.easeOut,
+            tween: ColorTween(end: targetColor),
+            builder: (context, color, _) => Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (option.icon != null) ...[
+                    Icon(option.icon, size: iconSize, color: color),
+                    const SizedBox(width: AppSpacing.xs),
+                  ],
+                  Flexible(
+                    child: Text(
+                      option.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: baseStyle?.copyWith(color: color),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -43,6 +43,38 @@ en móvil, rail en tablet, sidebar extendido en escritorio) y temas claro/oscuro
 
 ---
 
+## ⏱️ Tiempo de desarrollo
+
+Cronología real, tomada de los timestamps de `git log` (nada estimado):
+
+```mermaid
+gantt
+    title MARQUEE — 45 commits, de cero a responsive
+    dateFormat  YYYY-MM-DD HH:mm
+    axisFormat  %H:%M
+
+    section 1 jul
+    Encuadre, ADRs y andamiaje Melos       :done, 2026-07-01 17:10, 2026-07-01 18:05
+    M1 · Catálogo (HU-1)                   :done, 2026-07-01 18:32, 2026-07-01 18:49
+    i18n (slang) + fix toggle              :done, 2026-07-01 20:14, 2026-07-01 20:31
+    M3 · Detalle, nav y animaciones        :done, 2026-07-01 21:41, 2026-07-01 21:55
+    M4 · Offline-first (Drift) + banner    :done, 2026-07-01 22:16, 2026-07-01 22:43
+    M5 · Buscador (HU-3)                   :done, 2026-07-01 22:55, 2026-07-01 22:56
+    Pulido: ficha, similares, parallax     :done, 2026-07-01 23:11, 2026-07-01 23:38
+    README y CI                            :done, 2026-07-01 23:45, 2026-07-01 23:54
+    section 2 jul
+    Responsive 4 breakpoints + Acerca de   :done, 2026-07-02 00:09, 2026-07-02 00:45
+    Píldoras, scroll infinito y capturas   :done, 2026-07-02 00:51, 2026-07-02 01:48
+```
+
+**45 commits** · **~4h 20min de trabajo activo** (la suma de los tramos entre
+el primer y el último commit de cada bloque; los huecos entre bloques son
+pausas reales, no trabajo) dentro de una **ventana de 8h 38min** en dos
+sesiones · 10 milestones, cada uno cerrado con `analyze` + tests en verde y
+su entrada en la bitácora ([`docs/ai-usage.md`](docs/ai-usage.md)).
+
+---
+
 ## 🚀 Puesta en marcha
 
 ### Requisitos
