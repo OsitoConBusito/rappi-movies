@@ -129,8 +129,6 @@ class _DetailContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final imageBaseUrl = ref.watch(appConfigProvider).tmdbImageBaseUrl;
-    final colors = context.colors;
-    final textTheme = Theme.of(context).textTheme;
     final year = detail.releaseDate?.year;
 
     return CustomScrollView(
@@ -144,55 +142,94 @@ class _DetailContent extends ConsumerWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _Header(detail: detail, imageBaseUrl: imageBaseUrl, year: year),
-                const SizedBox(height: AppSpacing.lg),
-                if (detail.genres.isNotEmpty)
-                  FadeSlideIn(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                      child: _GenreChips(genres: detail.genres),
-                    ),
-                  ),
-                if (detail.overview.isNotEmpty)
-                  FadeSlideIn(
-                    delay: const Duration(milliseconds: 80),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
-                      child: Text(
-                        detail.overview,
-                        style: textTheme.bodyLarge?.copyWith(
-                          color: colors.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ),
-                if (detail.cast.isNotEmpty)
-                  FadeSlideIn(
-                    delay: const Duration(milliseconds: 160),
-                    child: _CastList(
-                      cast: detail.cast,
-                      imageBaseUrl: imageBaseUrl,
-                    ),
-                  ),
-                FadeSlideIn(
-                  delay: const Duration(milliseconds: 220),
-                  child: _InfoGrid(detail: detail),
-                ),
-                if (detail.recommendations.isNotEmpty)
-                  FadeSlideIn(
-                    delay: const Duration(milliseconds: 300),
-                    child: _SimilarCarousel(
-                      medias: detail.recommendations,
-                      onOpen: onOpen,
-                    ),
-                  ),
-              ],
+            child: _DetailBody(
+              detail: detail,
+              imageBaseUrl: imageBaseUrl,
+              year: year,
+              onOpen: onOpen,
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+/// Cuerpo del detalle, **adaptativo**: una columna en móvil/tablet-portrait, y
+/// un split (sinopsis+reparto | ficha técnica) en tablet-landscape/desktop.
+class _DetailBody extends StatelessWidget {
+  const _DetailBody({
+    required this.detail,
+    required this.imageBaseUrl,
+    required this.year,
+    this.onOpen,
+  });
+
+  final MediaDetail detail;
+  final String imageBaseUrl;
+  final int? year;
+  final void Function(Media media)? onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final textTheme = Theme.of(context).textTheme;
+    final device = AppBreakpoints.of(MediaQuery.sizeOf(context).width);
+    final isWide =
+        device == DeviceClass.tabletLandscape || device == DeviceClass.desktop;
+
+    final overview = detail.overview.isEmpty
+        ? null
+        : Text(
+            detail.overview,
+            style: textTheme.bodyLarge?.copyWith(color: colors.textSecondary),
+          );
+    final cast = detail.cast.isEmpty
+        ? null
+        : _CastList(cast: detail.cast, imageBaseUrl: imageBaseUrl);
+    final similar = detail.recommendations.isEmpty
+        ? null
+        : _SimilarCarousel(medias: detail.recommendations, onOpen: onOpen);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _Header(detail: detail, imageBaseUrl: imageBaseUrl, year: year),
+        const SizedBox(height: AppSpacing.lg),
+        if (detail.genres.isNotEmpty) ...[
+          _GenreChips(genres: detail.genres),
+          const SizedBox(height: AppSpacing.lg),
+        ],
+        if (isWide)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 17,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ?overview,
+                    if (cast != null) ...[
+                      const SizedBox(height: AppSpacing.xl),
+                      cast,
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.xxl),
+              Expanded(flex: 10, child: _InfoGrid(detail: detail)),
+            ],
+          )
+        else ...[
+          if (overview != null) ...[
+            overview,
+            const SizedBox(height: AppSpacing.xl),
+          ],
+          if (cast != null) ...[cast, const SizedBox(height: AppSpacing.xl)],
+          _InfoGrid(detail: detail),
+        ],
+        ?similar,
       ],
     );
   }
@@ -281,32 +318,29 @@ class _InfoGrid extends StatelessWidget {
 
     final textTheme = Theme.of(context).textTheme;
     final colors = context.colors;
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (final (label, value) in rows)
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 130,
-                    child: Text(
-                      label,
-                      style: textTheme.labelSmall?.copyWith(
-                        color: colors.textMuted,
-                      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final (label, value) in rows)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 130,
+                  child: Text(
+                    label,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colors.textMuted,
                     ),
                   ),
-                  Expanded(child: Text(value, style: textTheme.bodyMedium)),
-                ],
-              ),
+                ),
+                Expanded(child: Text(value, style: textTheme.bodyMedium)),
+              ],
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
