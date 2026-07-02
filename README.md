@@ -60,7 +60,7 @@ gantt
     M3 · Detalle, nav y animaciones        :done, 2026-07-01 21:41, 2026-07-01 21:55
     M4 · Offline-first (Drift) + banner    :done, 2026-07-01 22:16, 2026-07-01 22:43
     M5 · Buscador (HU-3)                   :done, 2026-07-01 22:55, 2026-07-01 22:56
-    Pulido: ficha, similares, parallax     :done, 2026-07-01 23:11, 2026-07-01 23:38
+    Pulido — ficha, similares, parallax    :done, 2026-07-01 23:11, 2026-07-01 23:38
     README y CI                            :done, 2026-07-01 23:45, 2026-07-01 23:54
     section 2 jul
     Responsive 4 breakpoints + Acerca de   :done, 2026-07-02 00:09, 2026-07-02 00:45
