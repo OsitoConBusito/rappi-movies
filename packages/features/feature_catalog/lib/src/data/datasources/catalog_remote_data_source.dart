@@ -40,6 +40,18 @@ class CatalogRemoteDataSource {
     );
   }
 
+  Future<Either<Failure, MediaPageDto>> search(String query) {
+    return _apiClient.get<MediaPageDto>(
+      '/search/multi',
+      queryParameters: {
+        'query': query,
+        'language': languageCode,
+        'include_adult': false,
+      },
+      decode: (data) => MediaPageDto.fromJson(data! as Map<String, dynamic>),
+    );
+  }
+
   String _typeSegment(MediaType type) => switch (type) {
     MediaType.movie => 'movie',
     MediaType.tv => 'tv',

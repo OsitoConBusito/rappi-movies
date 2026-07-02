@@ -35,6 +35,10 @@ class _FakeCatalogRepository implements CatalogRepository {
     required MediaType type,
     required int id,
   }) async => const Left(UnknownFailure());
+
+  @override
+  Future<Either<Failure, List<Media>>> search(String query) async =>
+      const Right([]);
 }
 
 void main() {

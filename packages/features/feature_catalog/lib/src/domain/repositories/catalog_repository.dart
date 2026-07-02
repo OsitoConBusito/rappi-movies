@@ -31,4 +31,8 @@ abstract interface class CatalogRepository {
     required MediaType type,
     required int id,
   });
+
+  /// Busca títulos por nombre (películas + series combinadas). No se cachea
+  /// (RN-5): requiere conexión.
+  Future<Either<Failure, List<Media>>> search(String query);
 }

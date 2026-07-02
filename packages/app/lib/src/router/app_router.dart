@@ -28,7 +28,10 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/search',
-              builder: (context, state) => const SearchPage(),
+              builder: (context, state) => SearchPage(
+                onOpenMedia: (media) =>
+                    context.push('/media/${media.type.name}/${media.id}'),
+              ),
             ),
           ],
         ),

@@ -25,3 +25,13 @@ DateTime? parseTmdbDate(String? raw) {
   if (raw == null || raw.isEmpty) return null;
   return DateTime.tryParse(raw);
 }
+
+/// Resuelve el [MediaType] de un resultado de `/search/multi` a partir de su
+/// `media_type`; devuelve `null` para tipos fuera de alcance (p. ej. `person`).
+extension MediaSearchTypeMapper on MediaDto {
+  MediaType? searchType() => switch (mediaType) {
+    'movie' => MediaType.movie,
+    'tv' => MediaType.tv,
+    _ => null,
+  };
+}

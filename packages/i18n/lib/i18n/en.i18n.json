@@ -20,7 +20,14 @@
   "search": {
     "title": "Search",
     "hint": "Search movies and series",
-    "comingSoon": "Search is coming soon."
+    "initial": "Search for your favourite movies and series",
+    "noResults": "No results for \"${query}\"",
+    "offline": "Search requires a connection",
+    "filters": {
+      "all": "All",
+      "movies": "Movies",
+      "series": "Series"
+    }
   },
   "nav": {
     "home": "Home",

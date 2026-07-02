@@ -20,7 +20,14 @@
   "search": {
     "title": "Buscar",
     "hint": "Busca películas y series",
-    "comingSoon": "El buscador llega pronto."
+    "initial": "Busca tus películas y series favoritas",
+    "noResults": "Sin resultados para \"${query}\"",
+    "offline": "La búsqueda requiere conexión",
+    "filters": {
+      "all": "Todo",
+      "movies": "Películas",
+      "series": "Series"
+    }
   },
   "nav": {
     "home": "Inicio",

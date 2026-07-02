@@ -117,6 +117,7 @@ class _CatalogCarouselState extends ConsumerState<CatalogCarousel> {
         final media = state.items[index];
         return MediaPosterTile(
           media: media,
+          width: _tileWidth,
           onTap: () => widget.onOpen?.call(media),
         );
       },

@@ -83,4 +83,19 @@ class CatalogRepositoryImpl implements CatalogRepository {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, List<Media>>> search(String query) async {
+    if (query.trim().isEmpty) return const Right([]);
+
+    final result = await _remote.search(query.trim());
+    return result.map((page) {
+      final medias = <Media>[];
+      for (final dto in page.results) {
+        final type = dto.searchType();
+        if (type != null) medias.add(dto.toDomain(type));
+      }
+      return medias;
+    });
+  }
 }

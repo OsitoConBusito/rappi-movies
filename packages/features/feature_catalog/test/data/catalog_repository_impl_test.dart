@@ -107,5 +107,34 @@ void main() {
         await expectLater(idsStream(), emits([1, 2]));
       },
     );
+
+    test('given results, then persons are filtered and types map', () async {
+      when(() => remote.search('night')).thenAnswer(
+        (_) async => const Right<Failure, MediaPageDto>(
+          MediaPageDto(
+            page: 1,
+            results: [
+              MediaDto(id: 1, title: 'A Movie', mediaType: 'movie'),
+              MediaDto(id: 2, name: 'A Show', mediaType: 'tv'),
+              MediaDto(id: 3, name: 'A Person', mediaType: 'person'),
+            ],
+          ),
+        ),
+      );
+
+      final result = await repository.search('night');
+      final medias = result.getOrElse((_) => <Media>[]);
+
+      expect(medias.map((media) => media.id).toList(), [1, 2]);
+      expect(medias.first.type, MediaType.movie);
+      expect(medias.last.type, MediaType.tv);
+    });
+
+    test('given a blank query, then search skips the network', () async {
+      final result = await repository.search('   ');
+
+      expect(result.getOrElse((_) => <Media>[]), isEmpty);
+      verifyNever(() => remote.search(any()));
+    });
   });
 }

@@ -19,6 +19,8 @@ abstract class MediaDto with _$MediaDto {
     @JsonKey(name: 'genre_ids') @Default(<int>[]) List<int> genreIds,
     @JsonKey(name: 'release_date') String? releaseDate,
     @JsonKey(name: 'first_air_date') String? firstAirDate,
+    // Solo presente en /search/multi (movie|tv|person).
+    @JsonKey(name: 'media_type') String? mediaType,
   }) = _MediaDto;
 
   factory MediaDto.fromJson(Map<String, dynamic> json) =>
