@@ -37,7 +37,10 @@ class CatalogHomePage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.lg),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              child: MediaTypeToggle(),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: MediaTypeToggle(),
+              ),
             ),
             const SizedBox(height: AppSpacing.xl),
             CatalogCarousel(
