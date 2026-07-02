@@ -58,11 +58,16 @@ class _ScaffoldWithNavBar extends StatelessWidget {
     final t = context.t;
 
     return Scaffold(
-      body: Column(
-        children: [
-          const OfflineBanner(),
-          Expanded(child: navigationShell),
-        ],
+      // SafeArea en el shell: mantiene el banner (y el contenido) por debajo de
+      // la status bar. El SafeArea interno de las páginas queda como no-op.
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            const OfflineBanner(),
+            Expanded(child: navigationShell),
+          ],
+        ),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
