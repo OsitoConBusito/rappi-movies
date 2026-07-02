@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:feature_catalog/src/data/datasources/catalog_remote_data_source.dart';
+import 'package:feature_catalog/src/data/local/catalog_database.dart';
 import 'package:feature_catalog/src/data/repositories/catalog_repository_impl.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
 import 'package:feature_catalog/src/domain/entities/media_detail.dart';
@@ -24,9 +25,19 @@ CatalogRemoteDataSource catalogRemoteDataSource(Ref ref) =>
 
 /// Repositorio del catálogo. `keepAlive` para preservar la caché en memoria
 /// entre pantallas mientras dura la sesión.
+/// Base de datos local (Drift). Se cierra al desecharse el provider.
 @Riverpod(keepAlive: true)
-CatalogRepository catalogRepository(Ref ref) =>
-    CatalogRepositoryImpl(ref.watch(catalogRemoteDataSourceProvider));
+CatalogDatabase catalogDatabase(Ref ref) {
+  final database = CatalogDatabase();
+  ref.onDispose(database.close);
+  return database;
+}
+
+@Riverpod(keepAlive: true)
+CatalogRepository catalogRepository(Ref ref) => CatalogRepositoryImpl(
+  ref.watch(catalogRemoteDataSourceProvider),
+  ref.watch(catalogDatabaseProvider),
+);
 
 /// Detalle de un título. Los estados de carga/error se manejan con AsyncValue;
 /// el fallo se propaga como error (Failure es Exception).

@@ -1,48 +1,36 @@
-import 'dart:async';
+import 'dart:convert';
 
 import 'package:core/core.dart';
 import 'package:feature_catalog/src/data/datasources/catalog_remote_data_source.dart';
+import 'package:feature_catalog/src/data/dtos/media_detail_dto.dart';
+import 'package:feature_catalog/src/data/local/catalog_database.dart';
+import 'package:feature_catalog/src/data/mappers/drift_mappers.dart';
 import 'package:feature_catalog/src/data/mappers/media_detail_mapper.dart';
 import 'package:feature_catalog/src/data/mappers/media_mapper.dart';
 import 'package:feature_catalog/src/domain/entities/media.dart';
 import 'package:feature_catalog/src/domain/entities/media_detail.dart';
 import 'package:feature_catalog/src/domain/repositories/catalog_repository.dart';
 
-/// Implementación remote-only del catálogo con una **caché reactiva en
-/// memoria**: `watchCategory` emite la lista acumulada y `refreshCategory`
-/// pide a la red, acumula páginas y re-emite. En M4 esta caché se reemplaza por
-/// Drift (single-source-of-truth persistente) sin tocar el contrato de dominio.
+/// Implementación **offline-first** del catálogo: la caché local (Drift) es la
+/// única fuente de verdad. `watchCategory` emite desde Drift (reactivo) y
+/// `refreshCategory` pide a la red y actualiza la caché, que dispara la nueva
+/// emisión. Sin conexión, se sigue sirviendo lo cacheado.
 class CatalogRepositoryImpl implements CatalogRepository {
-  CatalogRepositoryImpl(this._remote);
+  CatalogRepositoryImpl(this._remote, this._db);
 
   final CatalogRemoteDataSource _remote;
-
-  final Map<String, List<Media>> _cache = {};
-  final Map<String, StreamController<Either<Failure, List<Media>>>>
-  _controllers = {};
-  final Map<String, MediaDetail> _detailCache = {};
-
-  String _keyOf(MediaType type, MediaCategory category) =>
-      '${type.name}_${category.name}';
-
-  StreamController<Either<Failure, List<Media>>> _controllerFor(String key) =>
-      _controllers.putIfAbsent(
-        key,
-        StreamController<Either<Failure, List<Media>>>.broadcast,
-      );
+  final CatalogDatabase _db;
 
   @override
   Stream<Either<Failure, List<Media>>> watchCategory({
     required MediaType type,
     required MediaCategory category,
-  }) async* {
-    final key = _keyOf(type, category);
-    final controller = _controllerFor(key);
-    final cached = _cache[key];
-    if (cached != null) {
-      yield Right(cached);
-    }
-    yield* controller.stream;
+  }) {
+    return _db
+        .watchCategory(type.name, category.name)
+        .map<Either<Failure, List<Media>>>(
+          (rows) => Right(rows.map((row) => row.toDomain()).toList()),
+        );
   }
 
   @override
@@ -51,30 +39,23 @@ class CatalogRepositoryImpl implements CatalogRepository {
     required MediaCategory category,
     required int page,
   }) async {
-    final key = _keyOf(type, category);
     final result = await _remote.getCategory(
       type: type,
       category: category,
       page: page,
     );
-
     return result.match(
-      (failure) {
-        // Offline-first: si ya hay caché, no la pisamos con el error; solo
-        // propagamos el fallo por el stream cuando no hay nada que mostrar.
-        if (!_cache.containsKey(key)) {
-          _controllerFor(key).add(Left(failure));
-        }
-        return Left(failure);
-      },
-      (pageDto) {
-        final fetched = pageDto.results
-            .map((dto) => dto.toDomain(type))
+      (failure) async => Left(failure),
+      (pageDto) async {
+        final entries = pageDto.results
+            .map((dto) => dto.toDomain(type).toCompanion())
             .toList();
-        final previous = page == 1 ? <Media>[] : (_cache[key] ?? <Media>[]);
-        final merged = [...previous, ...fetched];
-        _cache[key] = merged;
-        _controllerFor(key).add(Right(merged));
+        await _db.saveCategoryPage(
+          type: type.name,
+          category: category.name,
+          page: page,
+          entries: entries,
+        );
         return Right(pageDto.page < pageDto.totalPages);
       },
     );
@@ -85,15 +66,21 @@ class CatalogRepositoryImpl implements CatalogRepository {
     required MediaType type,
     required int id,
   }) async {
-    final key = '${type.name}_$id';
-    final cached = _detailCache[key];
-    if (cached != null) return Right(cached);
-
     final result = await _remote.getDetail(type: type, id: id);
-    return result.map((dto) {
-      final detail = dto.toDomain(type);
-      _detailCache[key] = detail;
-      return detail;
-    });
+    return result.match(
+      (failure) async {
+        // Offline: servir el detalle desde la caché si existe.
+        final payload = await _db.getDetailPayload(type.name, id);
+        if (payload == null) return Left(failure);
+        final dto = MediaDetailDto.fromJson(
+          jsonDecode(payload) as Map<String, dynamic>,
+        );
+        return Right(dto.toDomain(type));
+      },
+      (dto) async {
+        await _db.saveDetailPayload(type.name, id, jsonEncode(dto.toJson()));
+        return Right(dto.toDomain(type));
+      },
+    );
   }
 }
