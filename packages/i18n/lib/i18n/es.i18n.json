@@ -7,7 +7,9 @@
     "movies": "Películas",
     "series": "Series",
     "popular": "Popular",
-    "topRated": "Top Rated"
+    "topRated": "Top Rated",
+    "featured": "Destacada hoy",
+    "viewDetail": "Ver detalle"
   },
   "language": {
     "label": "Idioma",
