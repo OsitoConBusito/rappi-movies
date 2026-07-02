@@ -1,5 +1,5 @@
+import 'package:app/src/router/app_router.dart';
 import 'package:design_system/design_system.dart';
-import 'package:feature_catalog/feature_catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n/i18n.dart';
@@ -13,7 +13,7 @@ class MarqueeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeData = TranslationProvider.of(context);
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'MARQUEE',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
@@ -22,7 +22,7 @@ class MarqueeApp extends StatelessWidget {
       locale: localeData.flutterLocale,
       supportedLocales: AppLocaleUtils.supportedLocales,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      home: const CatalogHomePage(),
+      routerConfig: appRouter,
     );
   }
 }

@@ -29,6 +29,12 @@ class _FakeCatalogRepository implements CatalogRepository {
     required MediaCategory category,
     required int page,
   }) async => const Right(false);
+
+  @override
+  Future<Either<Failure, MediaDetail>> getDetail({
+    required MediaType type,
+    required int id,
+  }) async => const Left(UnknownFailure());
 }
 
 void main() {
