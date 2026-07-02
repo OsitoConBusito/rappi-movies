@@ -122,4 +122,18 @@ aceptó sin discusión.
 - **Verificación:** test de integración con Drift en memoria (offline mantiene la
   caché); 22 tests verdes; el build web compila Drift-on-web.
 
+### 2026-07-01 — M5: Buscador (HU-3)
+
+- **Qué se pidió a la IA:** buscador por nombre con debounce, resultados
+  combinados con filtro por tipo, y estados.
+- **Aporte de la IA:** `repo.search` sobre `/search/multi` (filtra personas, mapea
+  movie/tv, no cachea por RN-5); `SearchResults` notifier con debounce (400 ms) y
+  `SelectedSearchFilter`; `SearchPage` con campo, chips (Todo/Películas/Series),
+  grid con badge de tipo, navegación al detalle y estados inicial/vacío/offline.
+- **Decisiones humanas:** filtro Todo/Películas/Series (People fuera de alcance);
+  badge de tipo por icono (agnóstico al idioma).
+- **Verificación:** tests de `search` (filtra personas; query vacía no pega a la
+  red); 24 tests verdes; el build web compila. **Las 3 historias del enunciado
+  quedan completas.**
+
 <!-- Próximas entradas se añaden aquí a medida que avanzamos. -->

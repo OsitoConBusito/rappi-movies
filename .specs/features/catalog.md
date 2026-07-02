@@ -1,9 +1,9 @@
 # Spec — Catálogo de Películas y Series
 
-- **Estado:** En progreso
+- **Estado:** Implementado (pendiente pulido M6)
 - **Autor:** Juan Cano (con asistencia de Claude)
 - **Última actualización:** 2026-07-01
-- **Reconciliado contra código:** 2026-07-01 (HU-1, HU-2 y offline-first/RN-5 implementadas; HU-3 pendiente)
+- **Reconciliado contra código:** 2026-07-01 (HU-1, HU-2, HU-3 y offline-first/RN-5 implementadas)
 
 ## 1. Objetivo
 
