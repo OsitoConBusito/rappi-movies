@@ -67,6 +67,7 @@ class _DetailLoading extends ConsumerWidget {
     return CustomScrollView(
       slivers: [
         _DetailBackdropBar(
+          title: preview.title,
           url: preview.backdropPath == null
               ? null
               : '$imageBaseUrl/w780${preview.backdropPath}',
@@ -135,6 +136,7 @@ class _DetailContent extends ConsumerWidget {
     return CustomScrollView(
       slivers: [
         _DetailBackdropBar(
+          title: detail.title,
           url: detail.backdropPath == null
               ? null
               : '$imageBaseUrl/w780${detail.backdropPath}',
@@ -197,9 +199,10 @@ class _DetailContent extends ConsumerWidget {
 }
 
 class _DetailBackdropBar extends StatelessWidget {
-  const _DetailBackdropBar({required this.url});
+  const _DetailBackdropBar({required this.url, required this.title});
 
   final String? url;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -209,10 +212,52 @@ class _DetailBackdropBar extends StatelessWidget {
       pinned: true,
       stretch: true,
       backgroundColor: colors.surface,
-      // parallax (colapso) y zoomBackground (over-scroll) son los defaults de
-      // FlexibleSpaceBar; solo habilitamos el stretch en el SliverAppBar.
-      flexibleSpace: FlexibleSpaceBar(
-        background: _Backdrop(url: url, surface: colors.background),
+      flexibleSpace: LayoutBuilder(
+        builder: (context, constraints) {
+          final settings = context
+              .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
+          var collapse = 0.0;
+          if (settings != null) {
+            final delta = settings.maxExtent - settings.minExtent;
+            if (delta > 0) {
+              collapse =
+                  (1 - (settings.currentExtent - settings.minExtent) / delta)
+                      .clamp(0.0, 1.0);
+            }
+          }
+
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              // parallax + zoomBackground son los defaults de FlexibleSpaceBar;
+              // el stretch del SliverAppBar añade el zoom al over-scroll.
+              FlexibleSpaceBar(
+                background: _Backdrop(url: url, surface: colors.background),
+              ),
+              // Título informativo que aparece al colapsar el backdrop.
+              Positioned(
+                left: 56,
+                right: AppSpacing.lg,
+                bottom: 0,
+                height: kToolbarHeight,
+                child: IgnorePointer(
+                  child: Opacity(
+                    opacity: collapse,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -285,7 +330,7 @@ class _SimilarCarousel extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           SizedBox(
-            height: 220,
+            height: 232,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: medias.length,
