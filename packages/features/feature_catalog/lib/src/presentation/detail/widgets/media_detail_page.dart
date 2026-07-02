@@ -69,21 +69,34 @@ class _DetailContent extends ConsumerWidget {
               children: [
                 _Header(detail: detail, imageBaseUrl: imageBaseUrl, year: year),
                 const SizedBox(height: AppSpacing.lg),
-                if (detail.genres.isNotEmpty) ...[
-                  _GenreChips(genres: detail.genres),
-                  const SizedBox(height: AppSpacing.lg),
-                ],
-                if (detail.overview.isNotEmpty) ...[
-                  Text(
-                    detail.overview,
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: colors.textSecondary,
+                if (detail.genres.isNotEmpty)
+                  FadeSlideIn(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                      child: _GenreChips(genres: detail.genres),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xl),
-                ],
+                if (detail.overview.isNotEmpty)
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 80),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+                      child: Text(
+                        detail.overview,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
                 if (detail.cast.isNotEmpty)
-                  _CastList(cast: detail.cast, imageBaseUrl: imageBaseUrl),
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 160),
+                    child: _CastList(
+                      cast: detail.cast,
+                      imageBaseUrl: imageBaseUrl,
+                    ),
+                  ),
               ],
             ),
           ),
